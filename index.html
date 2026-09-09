@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জ্যোতিষ অসম - Jyotish Assam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8B5CF6;
+            --secondary-color: #EC4899;
+            --accent-color: #06B6D4;
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            border-radius: 12px;
+            margin: 40px 0;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Daily Horoscope Section */
+        .section {
+            margin: 50px 0;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .horoscope-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .horoscope-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .horoscope-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .zodiac-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .zodiac-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .zodiac-text {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 24px rgba(139, 92, 246, 0.15);
+            transform: translateY(-8px);
+        }
+
+        .service-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .service-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            background: linear-gradient(135deg, #fef3c7, #fee2e2);
+            border: 1px solid #fcd34d;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .ad-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .ad-text {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        /* Blog Section */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .blog-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .blog-tag {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .blog-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 50px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section .btn {
+            background: white;
+            color: var(--primary-color);
+            font-weight: 700;
+            padding: 14px 32px;
+            font-size: 16px;
+        }
+
+        .cta-section .btn:hover {
+            background: rgba(255,255,255,0.9);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            color: var(--text-light);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cta-section {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">✨ জ্যোতিষ অসম</div>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="changeLang('assamese')">অসমীয়া</button>
+                    <button class="lang-btn" onclick="changeLang('english')">English</button>
+                    <button class="lang-btn" onclick="changeLang('hindi')">हिंदी</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 id="heroTitle">আপোনাৰ ভৱিষ্যৎ আজ জানি লওক</h1>
+            <p id="heroSubtitle">প্রতিদিনৰ ৰাশিফল, কুন্ডলী বিশ্লেষণ আৰু জীৱনৰ লুকাই থকা ৰহস্য আবিষ্কাৰ কৰক</p>
+        </section>
+
+        <!-- Daily Horoscope -->
+        <section class="section">
+            <h2 class="section-title" id="horoscopeTitle">আজৰ ৰাশিফল</h2>
+            <div class="horoscope-grid" id="horoscopeGrid">
+                <!-- Content filled by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Ad Banner -->
+        <div class="ad-banner">
+            <div class="ad-title" id="adTitle">🎯 আপোনাৰ ব্যবসায়ৰ বিজ্ঞাপন স্থান</div>
+            <div class="ad-text" id="adText">প্রতিমাহ ৫০,০০০+ দৰ্শক - আমাৰ সৈতে যুক্ত হওক</div>
+        </div>
+
+        <!-- Services -->
+        <section class="section">
+            <h2 class="section-title" id="servicesTitle">আমাৰ প্রিমিয়াম সেৱা</h2>
+            <div class="services-grid" id="servicesGrid">
+                <!-- Content filled by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Another Ad Banner -->
+        <div class="ad-banner" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);">
+            <div class="ad-title" id="ad2Title">💎 আভূষণ আৰু ৰত্ন বিক্রয় - বিশেষ অফাৰ</div>
+            <div class="ad-text" id="ad2Text">আমাৰ পৰামৰ্শকৃত ৰত্ন ক্রয় কৰক</div>
+        </div>
+
+        <!-- Testimonials -->
+        <section class="section">
+            <h2 class="section-title" id="testimonialTitle">গ্রাহকৰ মতামত</h2>
+            <div class="testimonials-grid" id="testimonialsGrid">
+                <!-- Content filled by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section class="section">
+            <h2 class="section-title" id="blogTitle">জ্যোতিষ শিক্ষা এবং টিপছ</h2>
+            <div class="blog-grid" id="blogGrid">
+                <!-- Content filled by JavaScript -->
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 id="ctaTitle">আজই আপোনাৰ জ্যোতিষ যাত্রা আৰম্ভ কৰক</h2>
+            <button class="btn" onclick="openModal()" id="ctaButton">প্রিমিয়াম সদস্য হওক এখনে</button>
+        </section>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">প্রিমিয়াম সেৱা অৰ্ডাৰ কৰক</h2>
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <div class="form-group">
+                    <label for="name" id="labelName">নাম</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" id="labelEmail">ইমেইল</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone" id="labelPhone">ফোন</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob" id="labelDOB">জন্ম তাৰিখ</label>
+                    <input type="date" id="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="birthTime" id="labelBirthTime">জন্ম সময়</label>
+                    <input type="time" id="birthTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="birthPlace" id="labelBirthPlace">জন্ম স্থান</label>
+                    <input type="text" id="birthPlace" placeholder="নগৰ/চহৰ" required>
+                </div>
+                <div class="form-group">
+                    <label for="service" id="labelService">কোন সেৱা চাই</label>
+                    <select id="service" required>
+                        <option value="kundli">সম্পূৰ্ণ কুন্ডলী (₹299)</option>
+                        <option value="love">প্রেম-সম্পর্ক পৰামর্শ (₹99)</option>
+                        <option value="career">ক্যারিয়াৰ পূর্বাভাস (₹199)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 20px;" id="submitBtn">সেৱা ক্রয় কৰক</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম | <a href="#" style="color: white; text-decoration: none;">গোপনীয়তা নীতি</a>
+    </footer>
+
+    <script>
+        // Language Content
+        const content = {
+            assamese: {
+                heroTitle: 'আপোনাৰ ভৱিষ্যৎ আজ জানি লওক',
+                heroSubtitle: 'প্রতিদিনৰ ৰাশিফল, কুন্ডলী বিশ্লেষণ আৰু জীৱনৰ লুকাই থকা ৰহস্য আবিষ্কাৰ কৰক',
+                horoscopeTitle: 'আজৰ ৰাশিফল',
+                servicesTitle: 'আমাৰ প্রিমিয়াম সেৱা',
+                adTitle: '🎯 আপোনাৰ ব্যবসায়ৰ বিজ্ঞাপন স্থান',
+                adText: 'প্রতিমাহ ৫০,০০০+ দৰ্শক - আমাৰ সৈতে যুক্ত হওক',
+                ad2Title: '💎 আভূষণ আৰু ৰত্ন বিক্রয় - বিশেষ অফাৰ',
+                ad2Text: 'আমাৰ পৰামৰ্শকৃত ৰত্ন ক্রয় কৰক',
+                testimonialTitle: 'গ্রাহকৰ মতামত',
+                blogTitle: 'জ্যোতিষ শিক্ষা এবং টিপছ',
+                ctaTitle: 'আজই আপোনাৰ জ্যোতিষ যাত্রা আৰম্ভ কৰক',
+                ctaButton: 'প্রিমিয়াম সদস্য হওক এখনে',
+                horoscopes: [
+                    { icon: '♈', name: 'মেষ', text: 'আজ আপোনাৰ ভাগ্য অত্যন্ত ইতিবাচক থাকিব' },
+                    { icon: '♉', name: 'বৃষ', text: 'কৰ্মক্ষেত্ৰত উন্নতিৰ সম্ভাৱনা আছে' },
+                    { icon: '♊', name: 'মিথুন', text: 'প্রেম-প্রসংগত ভাল বাতৰি আহিব' },
+                    { icon: '♋', name: 'কর্কট', text: 'পৰিয়ালৰ সৈতে সময় কটাওক' },
+                    { icon: '♌', name: 'সিংহ', text: 'আৰ্থিক লাভৰ যোগ আছে' },
+                    { icon: '♍', name: 'কন্যা', text: 'স্বাস্থ্যৰ প্রতি মনোযোগ দিয়ে যত্ন লওক' },
+                    { icon: '♎', name: 'তুলা', text: 'ভালোবাসা আৰু স্নেহৰ বৃষ্টি হব' },
+                    { icon: '♏', name: 'বৃশ্চিক', text: 'লুকাই থকা প্রতিভা ফুটাবলৈ সময়' },
+                    { icon: '♐', name: 'ধনু', text: 'নতুন সুযোগৰ দৰজা খুলিব' },
+                    { icon: '♑', name: 'মকৰ', text: 'পৰিশ্রমৰ ফল পাবলৈ লাগিছে' },
+                    { icon: '♒', name: 'কুম্ভ', text: 'মিত্রতা আৰু সম্পর্ক শক্তিশালী হব' },
+                    { icon: '♓', name: 'মীন', text: 'সৃজনশীলতা প্রকাশৰ দিন আহিলে' }
+                ],
+                services: [
+                    { name: 'সম্পূৰ্ণ কুন্ডলী', desc: 'জন্মপত্রৰ বিস্তৃত বিশ্লেষণ', price: '₹299', icon: '🔮' },
+                    { name: 'প্রেম-সম্পর্ক পৰামর্শ', desc: 'আপোনাৰ সম্পর্কৰ ভৱিষ্যৎ', price: '₹99', icon: '💕' },
+                    { name: 'ক্যারিয়াৰ পূর্বাভাস', desc: 'আপোনাৰ কৰ্মজীৱনৰ পথ', price: '₹199', icon: '💼' }
+                ],
+                testimonials: [
+                    { text: 'এই ৱেবচাইট সঁচাই অসাধাৰণ! মোৰ কুন্ডলী একেবাৰে সঠিক আছিল।', author: 'প্রিয়া দাস' },
+                    { text: 'ক্যারিয়াৰ পৰামর্শ মোৰ জীৱনত প্রকৃত পৰিৱৰ্তন আনিলে।', author: 'ৰাজীৱ বৰা' },
+                    { text: 'দ্রুত আৰু নিখুঁত ফলাফল পাই মই অত্যন্ত সন্তুষ্ট হৈছো।', author: 'নীৱেদিতা শৰ্মা' }
+                ],
+                blogs: [
+                    { tag: 'জ্যোতিষ বিজ্ঞান', title: 'নক্ষত্র আৰু ভাগ্যৰ সম্পর্ক' },
+                    { tag: 'গ্রহ বিজ্ঞান', title: 'শুক্র গ্রহ আৰু প্রেম-প্রসংগ' },
+                    { tag: 'প্রাকৃতিক', title: 'সঠিক ৰত্ন পাথৰ নিৰ্বাচন' },
+                    { tag: 'সম্পর্ক', title: 'বিয়াৰ যোগ আৰু জীৱন সঙ্গী' }
+                ],
+                modalTitle: 'প্রিমিয়াম সেৱা অৰ্ডাৰ কৰক',
+                labelName: 'নাম',
+                labelEmail: 'ইমেইল',
+                labelPhone: 'ফোন',
+                labelDOB: 'জন্ম তাৰিখ',
+                labelBirthTime: 'জন্ম সময়',
+                labelBirthPlace: 'জন্ম স্থান',
+                labelService: 'কোন সেৱা চাই',
+                submitBtn: 'সেৱা ক্রয় কৰক',
+                footer: 'সকলো অধিকাৰ সংৰক্ষিত © ২০২৬ জ্যোতিষ অসম'
+            },
+            english: {
+                heroTitle: 'Know Your Future Today',
+                heroSubtitle: 'Daily horoscopes, birth chart analysis, and discover life\'s hidden secrets with our AI-powered astrology service',
+                horoscopeTitle: 'Today\'s Horoscope',
+                servicesTitle: 'Our Premium Services',
+                adTitle: '🎯 Advertise Your Business Here',
+                adText: '50,000+ monthly visitors - Join us today',
+                ad2Title: '💎 Jewelry & Gemstone Sales - Special Offer',
+                ad2Text: 'Buy recommended gemstones from us',
+                testimonialTitle: 'Client Reviews',
+                blogTitle: 'Astrology Education & Tips',
+                ctaTitle: 'Start Your Astrology Journey Today',
+                ctaButton: 'Become Premium Member',
+                horoscopes: [
+                    { icon: '♈', name: 'Aries', text: 'A day of great success awaits you' },
+                    { icon: '♉', name: 'Taurus', text: 'Career advancement is possible' },
+                    { icon: '♊', name: 'Gemini', text: 'Good news in love matters' },
+                    { icon: '♋', name: 'Cancer', text: 'Quality time with family' },
+                    { icon: '♌', name: 'Leo', text: 'Financial gains are possible' },
+                    { icon: '♍', name: 'Virgo', text: 'Focus on your health today' },
+                    { icon: '♎', name: 'Libra', text: 'Love and affection surround you' },
+                    { icon: '♏', name: 'Scorpio', text: 'Time to shine your talent' },
+                    { icon: '♐', name: 'Sagittarius', text: 'New opportunities are opening' },
+                    { icon: '♑', name: 'Capricorn', text: 'Hard work will pay off' },
+                    { icon: '♒', name: 'Aquarius', text: 'Friendships grow stronger' },
+                    { icon: '♓', name: 'Pisces', text: 'Your creativity will flourish' }
+                ],
+                services: [
+                    { name: 'Complete Birth Chart', desc: 'Detailed analysis of your birth chart', price: '₹299', icon: '🔮' },
+                    { name: 'Love & Relationship', desc: 'Your relationship future revealed', price: '₹99', icon: '💕' },
+                    { name: 'Career Forecast', desc: 'Your professional path ahead', price: '₹199', icon: '💼' }
+                ],
+                testimonials: [
+                    { text: 'This website is amazing! My birth chart analysis was incredibly accurate.', author: 'Priya Das' },
+                    { text: 'The career guidance truly transformed my professional life.', author: 'Rajiv Bora' },
+                    { text: 'Quick and accurate results. I\'m very satisfied with the service.', author: 'Nivedita Sharma' }
+                ],
+                blogs: [
+                    { tag: 'Astrology', title: 'Planets and Your Destiny' },
+                    { tag: 'Planets', title: 'Venus and Love Matters' },
+                    { tag: 'Gemstones', title: 'How to Choose the Right Stone' },
+                    { tag: 'Relationships', title: 'Marriage Compatibility' }
+                ],
+                modalTitle: 'Order Premium Service',
+                labelName: 'Name',
+                labelEmail: 'Email',
+                labelPhone: 'Phone',
+                labelDOB: 'Date of Birth',
+                labelBirthTime: 'Birth Time',
+                labelBirthPlace: 'Birth Place',
+                labelService: 'Select Service',
+                submitBtn: 'Purchase Service',
+                footer: 'All rights reserved © 2026 Jyotish Assam'
+            },
+            hindi: {
+                heroTitle: 'अपना भविष्य आज जानें',
+                heroSubtitle: 'प्रतिदिन का राशिफल, कुंडली विश्लेषण और जीवन के छिपे रहस्य की खोज करें',
+                horoscopeTitle: 'आज का राशिफल',
+                servicesTitle: 'हमारी प्रीमियम सेवाएं',
+                adTitle: '🎯 अपने व्यवसाय का विज्ञापन दें',
+                adText: 'हर महीने 50,000+ आगंतुक - आज ही जुड़ें',
+                ad2Title: '💎 आभूषण और रत्न बिक्री - विशेष ऑफर',
+                ad2Text: 'हमारे पास से सुझाए गए रत्न खरीदें',
+                testimonialTitle: 'ग्राहक समीक्षाएं',
+                blogTitle: 'ज्योतिष शिक्षा और सुझाव',
+                ctaTitle: 'आज ही अपनी ज्योतिष यात्रा शुरू करें',
+                ctaButton: 'प्रीमियम सदस्य बनें',
+                horoscopes: [
+                    { icon: '♈', name: 'मेष', text: 'आज आपकी किस्मत बहुत अच्छी है' },
+                    { icon: '♉', name: 'वृष', text: 'कैरियर में उन्नति संभव है' },
+                    { icon: '♊', name: 'मिथुन', text: 'प्रेम में अच्छी खबर मिल सकती है' },
+                    { icon: '♋', name: 'कर्क', text: 'परिवार के साथ समय बिताएं' },
+                    { icon: '♌', name: 'सिंह', text: 'आर्थिक लाभ संभव है' },
+                    { icon: '♍', name: 'कन्या', text: 'अपने स्वास्थ्य का ध्यान रखें' },
+                    { icon: '♎', name: 'तुला', text: 'प्यार और स्नेह आपके साथ है' },
+                    { icon: '♏', name: 'वृश्चिक', text: 'अपनी प्रतिभा दिखाने का समय' },
+                    { icon: '♐', name: 'धनु', text: 'नई सुविधाएं खुलने वाली हैं' },
+                    { icon: '♑', name: 'मकर', text: 'कड़ी मेहनत का फल मिलेगा' },
+                    { icon: '♒', name: 'कुंभ', text: 'दोस्ती और रिश्ते मजबूत होंगे' },
+                    { icon: '♓', name: 'मीन', text: 'आपकी रचनात्मकता निखरेगी' }
+                ],
+                services: [
+                    { name: 'पूर्ण कुंडली', desc: 'आपकी जन्मपत्री का विस्तृत विश्लेषण', price: '₹299', icon: '🔮' },
+                    { name: 'प्रेम और रिश्ते', desc: 'आपके रिश्ते का भविष्य', price: '₹99', icon: '💕' },
+                    { name: 'करियर पूर्वानुमान', desc: 'आपके पेशेवर जीवन का मार्ग', price: '₹199', icon: '💼' }
+                ],
+                testimonials: [
+                    { text: 'यह वेबसाइट वास्तव में शानदार है! मेरी कुंडली का विश्लेषण बिल्कुल सही था।', author: 'प्रिया दास' },
+                    { text: 'करियर की सलाह ने मेरे पेशेवर जीवन में असली बदलाव लाया।', author: 'राजीव बोरा' },
+                    { text: 'तेज और सटीक परिणाम। मैं बहुत संतुष्ट हूं।', author: 'नीवेदिता शर्मा' }
+                ],
+                blogs: [
+                    { tag: 'ज्योतिष', title: 'ग्रह और आपकी नियति' },
+                    { tag: 'ग्रह', title: 'शुक्र और प्रेम' },
+                    { tag: 'रत्न', title: 'सही रत्न कैसे चुनें' },
+                    { tag: 'रिश्ते', title: 'विवाह मेल' }
+                ],
+                modalTitle: 'प्रीमियम सेवा ऑर्डर करें',
+                labelName: 'नाम',
+                labelEmail: 'ईमेल',
+                labelPhone: 'फोन',
+                labelDOB: 'जन्म तारीख',
+                labelBirthTime: 'जन्म समय',
+                labelBirthPlace: 'जन्म स्थान',
+                labelService: 'सेवा चुनें',
+                submitBtn: 'सेवा खरीदें',
+                footer: 'सर्वाधिकार सुरक्षित © 2026 ज्योतिष असम'
+            }
+        };
+
+        let currentLang = 'assamese';
+
+        function changeLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderContent();
+        }
+
+        function renderContent() {
+            const data = content[currentLang];
+
+            document.getElementById('heroTitle').textContent = data.heroTitle;
+            document.getElementById('heroSubtitle').textContent = data.heroSubtitle;
+            document.getElementById('horoscopeTitle').textContent = data.horoscopeTitle;
+            document.getElementById('servicesTitle').textContent = data.servicesTitle;
+            document.getElementById('adTitle').textContent = data.adTitle;
+            document.getElementById('adText').textContent = data.adText;
+            document.getElementById('ad2Title').textContent = data.ad2Title;
+            document.getElementById('ad2Text').textContent = data.ad2Text;
+            document.getElementById('testimonialTitle').textContent = data.testimonialTitle;
+            document.getElementById('blogTitle').textContent = data.blogTitle;
+            document.getElementById('ctaTitle').textContent = data.ctaTitle;
+            document.getElementById('ctaButton').textContent = data.ctaButton;
+            document.getElementById('modalTitle').textContent = data.modalTitle;
+            document.getElementById('labelName').textContent = data.labelName;
+            document.getElementById('labelEmail').textContent = data.labelEmail;
+            document.getElementById('labelPhone').textContent = data.labelPhone;
+            document.getElementById('labelDOB').textContent = data.labelDOB;
+            document.getElementById('labelBirthTime').textContent = data.labelBirthTime;
+            document.getElementById('labelBirthPlace').textContent = data.labelBirthPlace;
+            document.getElementById('labelService').textContent = data.labelService;
+            document.getElementById('submitBtn').textContent = data.submitBtn;
+            document.getElementById('footer').textContent = data.footer;
+
+            // Horoscopes
+            const horoscopeGrid = document.getElementById('horoscopeGrid');
+            horoscopeGrid.innerHTML = data.horoscopes.map(h => `
+                <div class="horoscope-card">
+                    <div class="zodiac-icon">${h.icon}</div>
+                    <div class="zodiac-name">${h.name}</div>
+                    <div class="zodiac-text">${h.text}</div>
+                </div>
+            `).join('');
+
+            // Services
+            const servicesGrid = document.getElementById('servicesGrid');
+            servicesGrid.innerHTML = data.services.map(s => `
+                <div class="service-card">
+                    <div class="service-icon">${s.icon}</div>
+                    <div class="service-name">${s.name}</div>
+                    <div class="service-desc">${s.desc}</div>
+                    <div class="price">${s.price}</div>
+                    <button class="btn" onclick="openModal()">${data.submitBtn}</button>
+                </div>
+            `).join('');
+
+            // Testimonials
+            const testimonialsGrid = document.getElementById('testimonialsGrid');
+            testimonialsGrid.innerHTML = data.testimonials.map(t => `
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"${t.text}"</div>
+                    <div class="testimonial-author"><span class="stars">⭐⭐⭐⭐⭐</span>${t.author}</div>
+                </div>
+            `).join('');
+
+            // Blogs
+            const blogGrid = document.getElementById('blogGrid');
+            blogGrid.innerHTML = data.blogs.map(b => `
+                <div class="blog-card">
+                    <span class="blog-tag">${b.tag}</span>
+                    <div class="blog-title">${b.title}</div>
+                </div>
+            `).join('');
+        }
+
+        function openModal() {
+            document.getElementById('orderModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                dob: document.getElementById('dob').value,
+                birthTime: document.getElementById('birthTime').value,
+                birthPlace: document.getElementById('birthPlace').value,
+                service: document.getElementById('service').value
+            };
+
+            // Save to localStorage (for demo)
+            localStorage.setItem('orders', JSON.stringify(formData));
+
+            // Show success message
+            alert('আপোনাৰ অৰ্ডাৰ পাঠানো হৈছে! আমরা ২৪ ঘণ্টাৰ ভিতৰে যোগাযোগ কৰিম।');
+            
+            closeModal();
+            document.getElementById('orderForm').reset();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        renderContent();
+    </script>
+</body>
+</html>
