@@ -1,0 +1,202 @@
+/* CSS Variables for Brand Colors */
+:root {
+    --primary-blue: #0A192F;
+    --midnight-navy: #020C1B;
+    --gold: #D4AF37;
+    --gold-light: #F3E5AB;
+    --ivory: #FFFFF0;
+    --text-main: #333333;
+    --text-muted: #666666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif; /* English text */
+    background-color: #F8F9FA;
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* Assamese text will automatically use Tiro Bangla if specified, 
+   but we can apply it globally to headings for that heritage feel. */
+h1, h2, h3, .logo, .btn {
+    font-family: 'Tiro Bangla', serif;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--midnight-navy);
+    color: var(--ivory);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 24px;
+    color: var(--gold);
+    font-weight: bold;
+}
+.desktop-nav a {
+    color: var(--ivory);
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+.desktop-nav a:hover {
+    color: var(--gold);
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--midnight-navy) 0%, var(--primary-blue) 100%);
+    color: var(--ivory);
+    padding: 80px 0;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 42px;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+.hero p {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.btn-primary {
+    background-color: var(--gold);
+    color: var(--midnight-navy);
+}
+.btn-primary:hover {
+    background-color: #b5952f;
+}
+.btn-secondary {
+    background-color: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+}
+.btn-secondary:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+}
+.w-100 {
+    width: 100%;
+}
+
+/* Kundli Form Section */
+.kundli-section {
+    padding: 60px 0;
+}
+.kundli-section h2 {
+    text-align: center;
+    color: var(--primary-blue);
+    font-size: 32px;
+}
+.section-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--primary-blue);
+}
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: inherit;
+}
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+/* Loading Status */
+.loading-status {
+    margin-top: 15px;
+    text-align: center;
+    color: var(--primary-blue);
+    font-weight: bold;
+}
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    border-top-color: var(--gold);
+    animation: spin 1s ease-in-out infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Footer */
+footer {
+    background-color: var(--midnight-navy);
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+.footer-brand h3 {
+    color: var(--gold);
+}
