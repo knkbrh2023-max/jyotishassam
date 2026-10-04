@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>আচাৰ্যৰ সৈতে লাইভ চেট | জ্যোতিষ অসম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="config.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans Assamese', sans-serif; }
+        body { background: #fdf5e6; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        header { background: linear-gradient(135deg, #d4af37, #b48509); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+        .acharya-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; border: 2px solid #fff; }
+        .name-status h2 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .status { font-size: 12px; color: #fef08a; display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        
+        .timer-box { background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.3); }
+        .timer-warning { background: #ef4444; animation: pulse 1s infinite; border-color: #f87171; }
+        .recharge-btn { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        #chatArea { flex: 1; overflow-y: auto; padding: 20px; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); display: flex; flex-direction: column; gap: 12px; }
+        .message {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+}
+        .msg-acharya { background: #fff; color: #333; align-self: flex-start; border-top-left-radius: 2px; border: 1px solid #d4af37; }
+        .msg-user { background: linear-gradient(135deg, #d4af37, #b48509); color: white; align-self: flex-end; border-top-right-radius: 2px; }
+        .msg-astro-name { font-size: 11px; color: #b48509; font-weight: bold; margin-bottom: 4px; }
+        
+        .typing-indicator { display: none; align-self: flex-start; background: #fff; padding: 10px 15px; border-radius: 16px; border-top-left-radius: 2px; font-size: 13px; color: #b48509; font-style: italic; border: 1px solid #d4af37; }
+        .system-msg { align-self: center; background: rgba(212, 175, 55, 0.15); color: #b48509; font-size: 12px; font-weight: 600; padding: 6px 15px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.4); margin-bottom: 10px; }
+
+        footer { background: #fff; padding: 15px; display: flex; gap: 10px; align-items: center; border-top: 1px solid #e2e8f0; padding-bottom: 25px; }
+        input[type="text"] { flex: 1; padding: 14px 20px; border-radius: 25px; border: 1px solid #cbd5e1; outline: none; font-size: 15px; background: #f8fafc; transition: 0.3s; }
+        input[type="text"]:focus { border-color: #d4af37; background: #fff; }
+        button.send-btn { background: linear-gradient(135deg, #d4af37, #b48509); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
+        button.send-btn:disabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
+
+        #extensionModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
+        .modal-card { background: white; padding: 25px; border-radius: 16px; text-align: center; max-width: 400px; width: 100%; border-top: 5px solid #ef4444; }
+        .pack-btn { display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 12px; border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; background: #f9fafb; transition: 0.3s; }
+        .pack-btn:hover { border-color: #d4af37; background: #fdf5e6; }
+        
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="acharya-info">
+            <div class="avatar">🛕</div>
+            <div class="name-status">
+                <h2>আচাৰ্যৰ সৈতে লাইভ চেট</h2>
+                <div class="status" id="acharyaStatus"><span class="status-dot"></span> অনলাইন (Online)</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="timer-box" id="timerBox">⏱️ <span id="timeDisplay">00:00</span></div>
+            <button class="recharge-btn" onclick="document.getElementById('extensionModal').style.display='flex'">+ ৰিচাৰ্জ</button>
+        </div>
+    </header>
+
+    <div id="chatArea">
+        <div class="typing-indicator" id="typingIndicator">আচাৰ্যই টাইপ কৰি আছে... ⏳</div>
+    </div>
+
+    <footer>
+        <input type="text" id="userInput" placeholder="আপোনাৰ প্ৰশ্ন ইয়াত লিখক..." onkeypress="if(event.key==='Enter') sendAIMessage()">
+        <button class="send-btn" id="sendBtn" onclick="sendAIMessage()">➤</button>
+    </footer>
+
+    <div id="extensionModal">
+        <div class="modal-card">
+            <h3 style="color: #8b0000; font-size: 22px; margin-bottom: 10px;">⏳ সময় শেষ হৈছে!</h3>
+            <p style="color: #4b5563; font-size: 14.5px; margin-bottom: 20px;">আচাৰ্যৰ সৈতে কথা-বতৰা অব্যাহত ৰাখিবলৈ সময় বৃদ্ধি কৰক।</p>
+            <div class="pack-btn" onclick="rechargeTime(49, 5)">
+                <span style="font-size: 18px; font-weight: 700;">+ ৫ মিনিট</span>
+                <span style="font-size: 18px; font-weight: 700; color: #b48509;">₹49</span>
+            </div>
+            <div class="pack-btn" onclick="rechargeTime(79, 10)" style="border-color: #fbbf24; background: #fffbeb;">
+                <span style="font-size: 18px; font-weight: 700;">+ ১০ মিনিট <span style="font-size:11px; background:#ef4444; color:white; padding:2px 6px; border-radius:10px;">POPULAR</span></span>
+                <span style="font-size: 18px; font-weight: 700; color: #b48509;">₹79</span>
+            </div>
+            <button onclick="document.getElementById('extensionModal').style.display='none'" style="margin-top: 15px; background: none; border: none; color: #6b7280; text-decoration: underline; cursor: pointer;">পিছত কৰিম</button>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // গ্ৰাহকৰ Profile ID টো LocalStorage ৰ পৰা লোৱা হৈছে
+        const profileId = localStorage.getItem('ja_profile_id');
+        let timerInterval;
+        let availableSeconds = 0;
+
+        window.onload = async function() {
+            if (!profileId) {
+                alert("অনুগ্ৰহ কৰি প্ৰথমে পেমেন্ট সম্পূৰ্ণ কৰক।");
+                window.location.href = "index.html";
+                return;
+            }
+            await loadHistory();
+            await checkSubscription();
+        };
+
+        // ১. ডাটাবেছৰ পৰা চেট হিষ্ট্ৰী লোড কৰা
+        async function loadHistory() {
+            const { data, error } = await supabaseClient
+                .from('chat_messages')
+                .select('*')
+                .eq('profile_id', profileId)
+                .order('created_at', { ascending: true });
+
+            if (data && data.length > 0) {
+                const chatArea = document.getElementById('chatArea');
+                chatArea.innerHTML = '<div class="system-msg">✅ আপোনাৰ পূৰ্বৰ কথা-বতৰা</div>';
+                
+                data.forEach(msg => {
+                    renderMessage(msg.sender_type, msg.message);
+                });
+                chatArea.innerHTML += `<div class="typing-indicator" id="typingIndicator">আচাৰ্যই টাইপ কৰি আছে... ⏳</div>`;
+                chatArea.scrollTop = chatArea.scrollHeight;
+            } else {
+                renderMessage("acharya", "নমস্কাৰ! মই জ্যোতিষ অসমৰ আচাৰ্যই কৈছোঁ। মই আপোনাৰ জন্ম কুণ্ডলীৰ সবিশেষ চাই আছোঁ। আপোনাৰ প্ৰধান প্ৰশ্নটো কি, অনুগ্ৰহ কৰি তলত লিখক।");
+            }
+        }
+
+        // ২. ডাটাবেছৰ পৰা সময় (Minutes) লোড কৰা
+        async function checkSubscription() {
+            const { data } = await supabaseClient
+                .from('subscriptions')
+                .select('available_minutes')
+                .eq('profile_id', profileId)
+                .single();
+
+            if (data) {
+                availableSeconds = data.available_minutes * 60;
+                if (availableSeconds > 0) {
+                    startTimer();
+                } else {
+                    lockChat();
+                }
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerUI();
+            
+            timerInterval = setInterval(async () => {
+                availableSeconds--;
+                updateTimerUI();
+
+                // প্ৰতি ৬০ ছেকেণ্ডত ডাটাবেছত মিনিটটো আপডেট কৰা হ'ব
+                if (availableSeconds > 0 && availableSeconds % 60 === 0) {
+                    await supabaseClient.from('subscriptions')
+                        .update({ available_minutes: availableSeconds / 60 })
+                        .eq('profile_id', profileId);
+                }
+
+                if (availableSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    await supabaseClient.from('subscriptions').update({ available_minutes: 0 }).eq('profile_id', profileId);
+                    lockChat();
+                    document.getElementById('extensionModal').style.display = 'flex';
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            let m = Math.floor(availableSeconds / 60);
+            let s = availableSeconds % 60;
+            document.getElementById('timeDisplay').innerText = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+
+            if (availableSeconds > 0 && availableSeconds <= 60) {
+                document.getElementById('timerBox').classList.add('timer-warning'); 
+            } else {
+                document.getElementById('timerBox').classList.remove('timer-warning');
+            }
+        }
+
+        function lockChat() {
+            document.getElementById('userInput').disabled = true;
+            document.getElementById('userInput').placeholder = "সময় শেষ! ➕ ৰিচাৰ্জ কৰি কথা পাতক...";
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('acharyaStatus').innerHTML = "অফলাইন - সময় উকলিছে";
+            document.getElementById('acharyaStatus').style.color = "#fca5a5";
+        }
+
+        function unlockChat() {
+            document.getElementById('userInput').disabled = false;
+            document.getElementById('userInput').placeholder = "আপোনাৰ প্ৰশ্ন ইয়াত লিখক...";
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('acharyaStatus').innerHTML = "<span class='status-dot'></span> অনলাইন (Online)";
+            document.getElementById('acharyaStatus').style.color = "#fef08a";
+        }
+
+       // ৩. AI লৈ মেছেজ পঠোৱা (Edge Function Call) - Fixed Version
+        async function sendAIMessage() {
+            if (availableSeconds <= 0) {
+                document.getElementById('extensionModal').style.display = 'flex';
+                return;
+            }
+            
+            let inputField = document.getElementById('userInput');
+            let text = inputField.value.trim();
+            if(text === "") return;
+
+            renderMessage("user", text);
+            inputField.value = "";
+            
+            document.getElementById('typingIndicator').style.display = 'block';
+            document.getElementById('chatArea').scrollTop = document.getElementById('chatArea').scrollHeight;
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ profileId: profileId, message: text })
+                });
+                
+                const data = await response.json();
+                document.getElementById('typingIndicator').style.display = 'none';
+
+                // কেৱল আচলতে সময় শেষ হ'লেহে পপ-আপ দেখুৱাব
+                if (data.error === 'time_up' || (data.success === false && data.error && data.error.includes('time'))) {
+                    lockChat();
+                    document.getElementById('extensionModal').style.display = 'flex';
+                    return;
+                }
+
+                if (response.ok && data.success && data.reply) {
+                    renderMessage("acharya", data.reply);
+                } else {
+                    renderMessage("acharya", "ক্ষমা কৰিব, চাৰ্ভাৰত অলপ অসুবিধা হৈছে। পুনৰ সুধিবনে?");
+                }
+            } catch (error) {
+                document.getElementById('typingIndicator').style.display = 'none';
+                renderMessage("acharya", "ইণ্টাৰনেটৰ সংযোগ বিচ্ছিন্ন হৈছে। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।");
+            }
+        }
+        function renderMessage(sender, text) {
+            let chatArea = document.getElementById('chatArea');
+            let msgDiv = document.createElement('div');
+            msgDiv.className = `message msg-${sender}`;
+            
+            if(sender === 'acharya') {
+                msgDiv.innerHTML = `<div class="msg-astro-name">আচাৰ্য</div>${text}`;
+            } else {
+                msgDiv.innerHTML = `${text}`;
+            }
+            
+            chatArea.insertBefore(msgDiv, document.getElementById('typingIndicator'));
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // ৪. ৰিচাৰ্জ পেমেন্ট
+        function rechargeTime(amount, minutesToAdd) {
+            var options = {
+                "key": window.JA_CONFIG.razorpayKeyId,
+                "amount": amount * 100, 
+                "currency": "INR",
+                "name": "জ্যোতিষ অসম",
+                "description": `আচাৰ্যৰ সৈতে +${minutesToAdd} মিনিট`,
+                "handler": async function (response) {
+                    document.getElementById('extensionModal').style.display = 'none';
+                    
+                    // ডাটাবেছত নতুন মিনিট যোগ কৰা
+                    const currentMins = Math.floor(availableSeconds / 60);
+                    const newMins = (currentMins > 0 ? currentMins : 0) + minutesToAdd;
+                    
+                    await supabaseClient.from('subscriptions')
+                        .update({ available_minutes: newMins, payment_status: 'paid' })
+                        .eq('profile_id', profileId);
+                    
+                    availableSeconds = newMins * 60;
+                    unlockChat();
+                    startTimer();
+                    renderMessage("acharya", `ধন্যবাদ! আপোনাৰ পেমেন্ট সফল হৈছে আৰু সময় বৃদ্ধি কৰা হৈছে।`);
+                },
+                "theme": { "color": "#10B981" }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+</body>
+</html>
