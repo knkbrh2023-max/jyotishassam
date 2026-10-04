@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="as"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>আপোনাৰ Report | Jyotish Assam</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="topbar"><div class="wrap nav"><a class="brand" href="index.html">🔮 জ্যোতিষ অসম</a><a class="small-btn" href="index.html">Home</a></div></header>
+<main class="wrap section">
+<div class="trust-card">
+<span class="eyebrow">PERSONAL REPORT</span><h1>আপোনাৰ জ্যোতিষ Report</h1>
+<p id="status">Loading...</p><div id="reportBox"></div>
+</div></main>
+<script src="config.js"></script>
+<script>
+(async()=>{
+ const id=new URLSearchParams(location.search).get("order");
+ const s=document.getElementById("status"), b=document.getElementById("reportBox");
+ if(!id){s.textContent="Order ID missing.";return}
+ if(!JA_CONFIG.apiBaseUrl || JA_CONFIG.apiBaseUrl.includes("YOUR-BACKEND")){
+   s.textContent="Backend not configured yet. Please connect your backend in config.js."; return;
+ }
+ try{
+  const r=await fetch(JA_CONFIG.apiBaseUrl.replace(/\\/$/,"")+"/api/report/"+encodeURIComponent(id));
+  const d=await r.json(); if(!r.ok) throw new Error(d.message||"Report unavailable");
+  s.textContent=d.status==="ready"?"Report ready":"Report is being generated.";
+  if(d.status==="ready"){
+    b.innerHTML=(d.html||"<p>Report generated.</p>")+ (d.pdfUrl?'<p><a class="btn gold" href="'+d.pdfUrl+'" target="_blank" rel="noopener">Download PDF</a></p>':"");
+  }
+ }catch(e){s.textContent=e.message||"Unable to load report."}
+})();
+</script></body></html>

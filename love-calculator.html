@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বৈদিক প্ৰেম আৰু নাম মিলন কেলকুলেটৰ | জ্যোতিষ অসম</title>
+    <meta name="description" content="আপোনাৰ আৰু আপোনাৰ প্ৰিয়জনৰ নামৰ দ্বাৰা বৈদিক জ্যোতিষ আৰু সংখ্যাশাস্ত্ৰৰ আধাৰত প্ৰেমৰ মিল, মানসিক বুজাবুজি আৰু ভৱিষ্যৎ সম্পৰ্ক গণনা কৰক।">
+    
+    <!-- Google tag (gtag.js) - যাতে Analytics ত এই পেজৰ মানুহবোৰো লাইভ দেখা যায় -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans Assamese', 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #2e1065 0%, #1e1b4b 45%, #0f172a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .top-nav {
+            max-width: 650px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fbbf24;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fde68a;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: #fbbf24; color: #1e1b4b; }
+
+        .main-card {
+            max-width: 650px;
+            margin: 0 auto 30px;
+            background: linear-gradient(145deg, rgba(49, 16, 66, 0.9), rgba(17, 24, 39, 0.95));
+            border: 2px solid #d4af37;
+            border-radius: 24px;
+            padding: 30px 22px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(236, 72, 153, 0.25);
+            position: relative;
+            text-align: center;
+        }
+
+        .badge-top {
+            display: inline-block;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6);
+            color: white;
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #fde047;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .subtitle {
+            font-size: 14.5px;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .input-box-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 22px 18px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        .field-group label {
+            display: block;
+            font-size: 14px;
+            color: #fbcfe8;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+        .input-field, .select-field {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(236, 72, 153, 0.4);
+            background: rgba(15, 23, 42, 0.85);
+            color: #fff;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-field:focus, .select-field:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .heart-divider {
+            font-size: 28px;
+            margin: 8px 0 14px;
+            display: inline-block;
+            animation: pulseHeart 1.4s infinite;
+        }
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.22); }
+        }
+
+        .calc-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9333ea 100%);
+            color: #fff;
+            border: 2px solid #fbcfe8;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.45);
+            transition: 0.3s;
+        }
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(236, 72, 153, 0.65);
+        }
+
+        /* Loading Animation */
+        #loadingBox {
+            display: none;
+            padding: 35px 15px;
+        }
+        .spinner-heart {
+            font-size: 55px;
+            display: inline-block;
+            animation: beatSpin 1.2s infinite ease-in-out;
+            margin-bottom: 15px;
+        }
+        @keyframes beatSpin {
+            0% { transform: scale(0.9) rotate(0deg); }
+            50% { transform: scale(1.25) rotate(10deg); }
+            100% { transform: scale(0.9) rotate(0deg); }
+        }
+        .loading-step {
+            font-size: 16px;
+            color: #fde047;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Result Section */
+        #resultSection {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .couple-names {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fbcfe8;
+            background: rgba(236, 72, 153, 0.15);
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px dashed #f472b6;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 155px;
+            height: 155px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            background: conic-gradient(#ec4899 0%, #fbbf24 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+            position: relative;
+        }
+        .score-inner {
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            background: #1e1b4b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-number {
+            font-size: 38px;
+            font-weight: 700;
+            color: #fde047;
+            line-height: 1.1;
+        }
+        .score-label {
+            font-size: 12px;
+            color: #f9a8d4;
+            margin-top: 4px;
+        }
+
+        .bars-box {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+            margin-bottom: 18px;
+        }
+        .bar-item { margin-bottom: 12px; }
+        .bar-item:last-child { margin-bottom: 0; }
+        .bar-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            margin-bottom: 5px;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        .bar-track {
+            width: 100%;
+            height: 9px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #f472b6, #fbbf24);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .verdict-card {
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 4px solid #fbbf24;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: #f8fafc;
+            margin-bottom: 18px;
+        }
+
+        .lucky-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .lucky-box {
+            background: rgba(255,255,255,0.06);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 13px;
+        }
+        .lucky-box strong {
+            display: block;
+            color: #fde047;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        /* Paid Conversion Hook */
+        .premium-hook {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.85), rgba(88, 28, 135, 0.9));
+            border: 2px solid #fbbf24;
+            border-radius: 18px;
+            padding: 20px 18px;
+            margin-top: 22px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .premium-hook h3 {
+            color: #fde047;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .premium-hook p {
+            font-size: 13.5px;
+            color: #fef3c7;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .hook-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 13px 18px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            color: #1e1b4b;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-retry {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-whatsapp {
+            flex: 1;
+            padding: 12px;
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Extra Time-Killer Section below Calculator */
+        .tips-section {
+            max-width: 650px;
+            margin: 0 auto 40px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 24px 20px;
+        }
+        .tips-section h2 {
+            font-size: 19px;
+            color: #fde047;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .tip-card {
+            background: rgba(255,255,255,0.04);
+            border-left: 3px solid #ec4899;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .tip-card strong { color: #f9a8d4; }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="index.html" class="brand-title">🕉️ জ্যোতিষ অসম</a>
+        <a href="index.html" class="back-btn">← মূল পৃষ্ঠালৈ যাওক</a>
+    </nav>
+
+    <div class="main-card">
+        <span class="badge-top">✨ বৈদিক নাম-সংখ্যাশাস্ত্ৰ (Name Numerology) ✨</span>
+        <h1>💖 প্ৰেম আৰু নাম মিলন কেলকুলেটৰ</h1>
+        <p class="subtitle">আপোনাৰ আৰু আপোনাৰ প্ৰিয়জনৰ নাম লিখি জানক আপোনালোকৰ আত্মিক সংযোগ, ৰোমান্স আৰু ভৱিষ্যৎ বিবাহৰ সম্ভাৱনা কিমান শতাংশ!</p>
+
+        <div id="formSection" class="input-box-wrapper">
+            <div class="field-group">
+                <label>👦 আপোনাৰ নাম লিখক (অসমীয়া বা ইংৰাজীত):</label>
+                <input type="text" id="name1" class="input-field" placeholder="যেনে: ৰাহুল বা Rahul...">
+            </div>
+
+            <div class="heart-divider">💞</div>
+
+            <div class="field-group">
+                <label>👧 আপোনাৰ প্ৰিয়জনৰ নাম লিখক:</label>
+                <input type="text" id="name2" class="input-field" placeholder="যেনে: প্ৰিয়া বা Priya...">
+            </div>
+
+            <div class="field-group" style="margin-top: 12px;">
+                <label>🌙 সম্পৰ্কৰ বৰ্তমান অৱস্থা (ঐচ্ছিক):</label>
+                <select id="relType" class="select-field">
+                    <option value="crush">মনে মনে ভাল পাওঁ (Secret Crush)</option>
+                    <option value="love" selected>প্ৰেমৰ সম্পৰ্ক চলি আছে (In a Relationship)</option>
+                    <option value="marriage">বিবাহৰ কথা চলি আছে (Planning Marriage)</option>
+                    <option value="married">বিবাহিত দম্পতী (Married Couple)</option>
+                </select>
+            </div>
+
+            <button class="calc-btn" onclick="calculateLove()">🔮 আমাৰ প্ৰেমৰ মিল গণনা কৰক</button>
+        </div>
+
+        <!-- Suspense Loading -->
+        <div id="loadingBox">
+            <div class="spinner-heart">💖</div>
+            <p class="loading-step" id="loadingText">নামৰ আখৰৰ ধ্বনি আৰু স্পন্দন গণনা কৰা হৈছে...</p>
+        </div>
+
+        <!-- Output Result -->
+        <div id="resultSection">
+            <div class="couple-names" id="coupleHeader"></div>
+
+            <div class="score-circle">
+                <div class="score-inner">
+                    <div class="score-number" id="totalScore">0%</div>
+                    <div class="score-label">প্ৰেমৰ গভীৰতা</div>
+                </div>
+            </div>
+
+            <div class="bars-box">
+                <div class="bar-item">
+                    <div class="bar-top"><span>💞 আত্মিক আৰু মানসিক সংযোগ</span><span id="valSoul">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="barSoul"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-top"><span>🔥 ৰোমান্স আৰু পাৰস্পৰিক আকৰ্ষণ</span><span id="valRomance">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="barRomance"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-top"><span>🤝 বিশ্বাস আৰু বুজাবুজি</span><span id="valTrust">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="barTrust"></div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-top"><span>💍 দীর্ঘস্থায়ী ভৱিষ্যৎ / বিবাহ যোগ</span><span id="valFuture">0%</span></div>
+                    <div class="bar-track"><div class="bar-fill" id="barFuture"></div></div>
+                </div>
+            </div>
+
+            <div class="verdict-card" id="verdictText"></div>
+
+            <div class="lucky-grid">
+                <div class="lucky-box">🎨 আপোনালোকৰ শুভ ৰং<strong id="luckyColor">গুলপীয়া আৰু বগা</strong></div>
+                <div class="lucky-box">📅 লগ ধৰাৰ শুভ বাৰ<strong id="luckyDay">শুক্ৰবাৰ আৰু সোমবাৰ</strong></div>
+            </div>
+
+            <div class="action-row">
+                <button class="btn-retry" onclick="resetCalc()">🔄 আন এযোৰ নাম মিলাই চাওক</button>
+                <button class="btn-whatsapp" onclick="shareWhatsApp()">📲 প্ৰিয়জনক শ্বেয়াৰ কৰক</button>
+            </div>
+
+            <!-- Monetization Hook -->
+            <div class="premium-hook">
+                <h3>📜 জন্ম তাৰিখ মতে বিবাহৰ সম্পূৰ্ণ ভৱিষ্যৎ জানিব খুজিছে নেকি?</h3>
+                <p>নামৰ মিলন তো পালে! কিন্তু আপোনাৰ জন্ম কুণ্ডলীত <strong>মাংগলিক দোষ</strong> আছে নেকি, বিবাহ কেতিয়া হ'ব আৰু আপোনাৰ ভৱিষ্যৎ জীৱনসংগীৰ স্বভাৱ কেনে হ'ব— সেয়া নিখুঁতকৈ জানিবলৈ আমাৰ সম্পূৰ্ণ বৈদিক ৰিপোৰ্টখন ডাউনলোড কৰক।</p>
+                <a href="index.html#services" class="hook-btn">👉 প্ৰেম আৰু বিবাহৰ সম্পূৰ্ণ ৰিপোৰ্ট লওক (PDF)</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra reading content to increase session time even further -->
+    <div class="tips-section">
+        <h2>✨ প্ৰেম আৰু দাম্পত্য সুখ বৃদ্ধিৰ ৫টা সহজ বৈদিক উপায়</h2>
+        <div class="tip-card">
+            <strong>১. শুক্ৰবাৰৰ বিশেষ উপায়:</strong> বৈদিক জ্যোতিষত শুক্ৰ গ্ৰহ হৈছে প্ৰেম আৰু আকৰ্ষণৰ কাৰক। সম্পৰ্কত মধুৰতা বঢ়াবলৈ শুক্ৰবাৰে পাতল বগা বা গুলপীয়া ৰঙৰ কাপোৰ পিন্ধিব।
+        </div>
+        <div class="tip-card">
+            <strong>২. শোৱনি কোঠাৰ বাস্তু টিপছ:</strong> শোৱনি কোঠাত কেতিয়াও অকলশৰীয়া চৰাই বা দুখী ফটো নাৰাখিব। এযোৰ ৰাধা-কৃষ্ণ বা এযোৰ বগা হাঁহৰ ফটো ৰাখিলে পাৰস্পৰিক টান বৃদ্ধি পায়।
+        </div>
+        <div class="tip-card">
+            <strong>৩. মঙলবাৰ আৰু শনিবাৰে তৰ্ক এৰাই চলক:</strong> মংগল আৰু শনি বাৰত সৰু কথাতে কাজিয়া হোৱাৰ সম্ভাৱনা থাকে। কোনো গুৰুত্বপূৰ্ণ আলোচনা সদায় সোমবাৰ, বুধবাৰ বা শুক্ৰবাৰে কৰিব।
+        </div>
+        <div class="tip-card">
+            <strong>৪. পূৰ্ণিমাৰ চন্দ্ৰ দৰ্শন:</strong> চন্দ্ৰ হ'ল মনৰ কাৰক। যদি প্ৰিয়জনৰ সৈতে সঘনাই ভুল বুজাবুজি হয়, তেন্তে পূৰ্ণিমাৰ ৰাতি এখন্তেক জোনাকত বহি মনত শান্তি প্রার্থনা কৰক।
+        </div>
+        <div class="tip-card">
+            <strong>৫. উপহাৰৰ ৰহস্য:</strong> প্ৰিয়জনক কেতিয়াও চোকা বস্তু, ক'লা ৰুমাল বা ঘড়ী উপহাৰ নিদিব; ই সম্পৰ্কত দূৰত্ব আনে। সদায় সুগন্ধি, মিঠাই বা ফুল উপহাৰ দিব।
+        </div>
+    </div>
+
+    <script>
+        let lastShareText = "";
+
+        function getNameVibration(str) {
+            const clean = str.trim().toLowerCase().replace(/\s+/g, '');
+            let sum = 0;
+            for (let i = 0; i < clean.length; i++) {
+                sum += clean.charCodeAt(i) * (i + 1);
+            }
+            return sum;
+        }
+
+        function calculateLove() {
+            const n1 = document.getElementById('name1').value.trim();
+            const n2 = document.getElementById('name2').value.trim();
+            const relType = document.getElementById('relType').value;
+
+            if (!n1 || !n2) {
+                alert("অনুগ্ৰহ কৰি দুয়োটা নাম পূৰণ কৰক!");
+                return;
+            }
+
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('loadingBox').style.display = 'block';
+
+            const steps = [
+                "নামৰ আখৰৰ ধ্বনি আৰু স্পন্দন গণনা কৰা হৈছে...",
+                "শুক্ৰ আৰু চন্দ্ৰ গ্ৰহৰ মানসিক সংযোগ বিচাৰ কৰা হৈছে...",
+                "আপোনালোকৰ ভৱিষ্যৎ সম্পৰ্কৰ ফলাফল প্ৰস্তুত কৰা হৈছে..."
+            ];
+            let stepIdx = 0;
+            const stepInterval = setInterval(() => {
+                stepIdx++;
+                if (stepIdx < steps.length) {
+                    document.getElementById('loadingText').innerText = steps[stepIdx];
+                }
+            }, 1100);
+
+            setTimeout(() => {
+                clearInterval(stepInterval);
+                document.getElementById('loadingBox').style.display = 'none';
+                showLoveResult(n1, n2, relType);
+            }, 3400);
+        }
+
+        function showLoveResult(n1, n2, relType) {
+            // Order-independent hash so A+B gives same score as B+A
+            const pairSorted = [n1.toLowerCase().trim(), n2.toLowerCase().trim()].sort();
+            const seed = getNameVibration(pairSorted[0]) + getNameVibration(pairSorted[1]) * 3;
+
+            // Keep score realistically positive & exciting (68% to 98%)
+            const total = 68 + (seed % 31);
+            const soul = Math.min(99, Math.max(65, total + ((seed % 11) - 5)));
+            const romance = Math.min(99, Math.max(70, total + (((seed >> 2) % 13) - 6)));
+            const trust = Math.min(99, Math.max(68, total + (((seed >> 3) % 9) - 4)));
+            const future = Math.min(99, Math.max(66, total + (((seed >> 4) % 11) - 5)));
+
+            document.getElementById('coupleHeader').innerHTML = `${n1} ❤️ ${n2}`;
+            document.getElementById('totalScore').innerText = `${total}%`;
+
+            document.getElementById('valSoul').innerText = `${soul}%`;
+            document.getElementById('valRomance').innerText = `${romance}%`;
+            document.getElementById('valTrust').innerText = `${trust}%`;
+            document.getElementById('valFuture').innerText = `${future}%`;
+
+            const verdicts = [
+                `<strong>🌟 অসাধাৰণ আত্মিক সংযোগ:</strong> নামৰ আখৰৰ কম্পনাংক অনুসৰি <strong>${n1}</strong> আৰু <strong>${n2}</strong> ৰ মাজত এক গভীৰ পূৰ্বজন্মৰ টান আছে। সৰু-সুৰা অভিমান বা খং থাকিলেও আপোনালোক এজনে আনজনক এৰি থাকিব নোৱাৰে। অলপ ধৈৰ্য আৰু বিশ্বাসে এই সম্পৰ্কক এক সুখী ভৱিষ্যতলৈ লৈ যাব।`,
+                `<strong>💖 গভীৰ প্ৰেম আৰু আকৰ্ষণ যোগ:</strong> শুক্ৰ গ্ৰহৰ শুভ প্ৰভাৱত আপোনালোক দুয়োৰে মনৰ মিল অতি সুন্দৰ। এজনে নোকোৱাকৈয়ে আনজনৰ মনৰ কথা বুজি পোৱাৰ ক্ষমতা আছে। তৃতীয় ব্যক্তিৰ কথাত কাণ নিদিলে আপোনালোকৰ যুটী আদৰ্শনীয় হ'ব।`,
+                `<strong>💍 স্থায়ী বন্ধন আৰু সৌভাগ্যশালী যুটী:</strong> বৈদিক সংখ্যাশাস্ত্ৰ মতে আপোনালোক দুয়ো একলগ হ'লে দুয়োৰে ভাগ্য আৰু আৰ্থিক উন্নতি বৃদ্ধি পাব। সম্পৰ্কত খোলাখুলিকৈ কথা পতাৰ অভ্যাস ৰাখিলে কোনো বাধাই আপোনালোকক আঁতৰাব নোৱাৰে।`
+            ];
+            document.getElementById('verdictText').innerHTML = verdicts[seed % verdicts.length];
+
+            const colors = ["গুলপীয়া আৰু বগা", "ৰঙা আৰু সোণালী", "পাতল নীলা আৰু ক্ৰীম", "হালধীয়া আৰু পান্না সেউজীয়া", "বেঙুনীয়া আৰু ৰূপালী"];
+            const days = ["শুক্ৰবাৰ আৰু সোমবাৰ", "বৃহস্পতিবাৰ আৰু শুক্ৰবাৰ", "বুধবাৰ আৰু দেওবাৰ", "সোমবাৰ আৰু বৃহস্পতিবাৰ"];
+
+            document.getElementById('luckyColor').innerText = colors[seed % colors.length];
+            document.getElementById('luckyDay').innerText = days[seed % days.length];
+
+            document.getElementById('resultSection').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('barSoul').style.width = `${soul}%`;
+                document.getElementById('barRomance').style.width = `${romance}%`;
+                document.getElementById('barTrust').style.width = `${trust}%`;
+                document.getElementById('barFuture').style.width = `${future}%`;
+            }, 100);
+
+            lastShareText = `💖 বৈদিক নাম মিলন কেলকুলেটৰত ${n1} আৰু ${n2} ৰ প্ৰেমৰ মিল ওলাইছে ${total}%! ✨ আপোনাৰ আৰু আপোনাৰ প্ৰিয়জনৰ নাম মিলাই চাবলৈ এতিয়াই তলৰ লিংকত টিপক:\n👉 https://jyotishassam.com/love-calculator.html`;
+        }
+
+        function resetCalc() {
+            document.getElementById('name2').value = '';
+            document.getElementById('barSoul').style.width = '0%';
+            document.getElementById('barRomance').style.width = '0%';
+            document.getElementById('barTrust').style.width = '0%';
+            document.getElementById('barFuture').style.width = '0%';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('name2').focus();
+        }
+
+        function shareWhatsApp() {
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(lastShareText)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

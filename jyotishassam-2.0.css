@@ -1,0 +1,42 @@
+
+/* =========================================================
+   JYOTISH ASSAM 2.0 — PREMIUM DESIGN LAYER
+   Keeps existing IDs/classes and JavaScript intact.
+   ========================================================= */
+:root{
+  --ja-bg:#070b16;
+  --ja-panel:#0d1324;
+  --ja-panel2:#111a2e;
+  --ja-gold:#e7b84b;
+  --ja-gold2:#ffd978;
+  --ja-text:#f8f4ea;
+  --ja-muted:#a8b0c2;
+  --ja-line:rgba(231,184,75,.18);
+}
+html{scroll-behavior:smooth}
+body{background:#f7f4ee!important;color:#172033!important}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 15% 10%,rgba(231,184,75,.06),transparent 28%),radial-gradient(circle at 85% 30%,rgba(82,65,170,.05),transparent 30%)}
+nav{background:rgba(7,11,22,.92)!important;border-bottom:1px solid var(--ja-line)!important;backdrop-filter:blur(16px);box-shadow:0 10px 35px rgba(0,0,0,.18)!important}
+.nav-content{min-height:70px!important;max-width:1240px!important}
+.logo{font-family:Georgia,'Noto Sans Assamese',serif!important;letter-spacing:.01em}
+.logo span{background:linear-gradient(90deg,#fff,var(--ja-gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-logo-img{width:40px!important;height:40px!important;border:1px solid rgba(231,184,75,.45);box-shadow:0 0 20px rgba(231,184,75,.12)}
+.nav-links{gap:5px!important}.nav-links a{color:#dfe4ee!important;border:1px solid transparent}.nav-links a:hover{color:#ffd978!important;background:rgba(231,184,75,.07)!important;border-color:var(--ja-line)}.nav-links .active-link{color:#ffd978!important}
+.container{max-width:1240px!important}
+.hero-banner{border-radius:0 0 30px 30px!important;min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:75px 24px!important;margin-bottom:28px!important;box-shadow:0 25px 70px rgba(5,8,20,.22)!important;overflow:hidden}
+.hero-banner:after{content:"✦";position:absolute;right:8%;top:18%;font-size:120px;color:rgba(255,215,110,.07);animation:jaFloat 7s ease-in-out infinite}
+.hero-title{font-size:clamp(38px,6vw,68px)!important;max-width:900px;line-height:1.13!important;text-shadow:0 8px 35px rgba(0,0,0,.38)}
+.hero-subtitle{font-size:17px!important;max-width:760px!important}
+.hero-badge{background:rgba(255,255,255,.08)!important;border-color:rgba(255,215,120,.24)!important}
+.ja20-ai-spotlight{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:center;margin:28px 0 38px;padding:42px;border-radius:28px;background:linear-gradient(135deg,#080d1b,#101a31 58%,#151126);border:1px solid rgba(231,184,75,.25);box-shadow:0 24px 65px rgba(5,10,25,.18);overflow:hidden;color:white}
+.ja20-ai-spotlight:before{content:"";position:absolute;width:420px;height:420px;right:-150px;top:-180px;background:radial-gradient(circle,rgba(231,184,75,.18),transparent 65%);pointer-events:none}
+.ja20-kicker{font-size:12px;letter-spacing:.18em;color:#e7b84b;font-weight:800;margin-bottom:10px}.ja20-ai-copy h2{font-size:clamp(30px,4vw,48px);line-height:1.15;margin:0 0 15px}.ja20-ai-copy h2 span{background:linear-gradient(90deg,#e7b84b,#fff0ae);-webkit-background-clip:text;background-clip:text;color:transparent}.ja20-ai-copy p{color:#b9c1d2;max-width:680px;font-size:16px}.ja20-ai-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.ja20-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:13px 18px;border-radius:12px;font-weight:800;border:1px solid rgba(255,255,255,.16);transition:.2s}.ja20-btn:hover{transform:translateY(-2px)}.ja20-btn-gold{background:linear-gradient(135deg,#e7b84b,#b98116);color:#15100a;box-shadow:0 10px 30px rgba(231,184,75,.18)}.ja20-btn-ghost{color:white;background:rgba(255,255,255,.05)}.ja20-trust-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px;color:#8993a8;font-size:12px}
+.ja20-ai-orbit{height:280px;position:relative;display:grid;place-items:center}.ja20-orb{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;font-size:70px;color:#ffe8a0;background:radial-gradient(circle at 35% 30%,#ffe9a1,#b67d1a 55%,#2b1d08 72%);box-shadow:0 0 80px rgba(231,184,75,.25),inset 0 0 30px rgba(255,255,255,.16);animation:jaFloat 5s ease-in-out infinite}.ja20-orbit-card{position:absolute;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(10px);padding:9px 12px;border-radius:11px;color:#f3f0e8;font-size:12px;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.18)}.card-a{left:0;top:35px}.card-b{right:0;top:75px}.card-c{left:25px;bottom:25px}
+.section-title{font-size:34px!important}.section-subtitle{color:#687286!important}.free-tools-section{background:linear-gradient(180deg,#f7f4ee,#f1ece2)!important;border-radius:28px;border:1px solid #e7dece}.tool-card,.service-card,.rashi-card{border-color:#e5dccb!important;box-shadow:0 15px 40px rgba(47,32,13,.06)!important}.service-card{transition:.22s}.service-card:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(47,32,13,.12)!important}.service-price{color:#a87513!important}.service-btn{background:linear-gradient(135deg,#b9821b,#e7b84b)!important;color:#171108!important;box-shadow:0 8px 20px rgba(185,130,27,.2)!important}.secure-banner{background:linear-gradient(135deg,#fffaf0,#f5eddd)!important;border-color:#e7c979!important}.rashi-card:hover{border-color:#c89a35!important}.rashi-icon{background:#fff7df!important;color:#a87513!important}
+/* Make the first premium service feel like the flagship AI product */
+#premium-services .services-grid .service-card:first-child{background:linear-gradient(145deg,#0a1020,#121d35)!important;color:#fff!important;border-color:rgba(231,184,75,.35)!important;box-shadow:0 22px 60px rgba(8,14,30,.22)!important}.services-grid .service-card:first-child p{color:#b7c0d0!important}.services-grid .service-card:first-child .service-price{color:#ffd66d!important}.services-grid .service-card:first-child .service-btn{background:linear-gradient(135deg,#e7b84b,#ffd978)!important}
+/* Remove overly loud old cyan look from the zodiac wrapper */
+.zodiac-container{background:linear-gradient(135deg,#080e1c,#111a2f)!important;border-color:rgba(231,184,75,.2)!important;box-shadow:0 20px 50px rgba(7,12,25,.16)!important}.zodiac-item{border-color:rgba(231,184,75,.18)!important;background:rgba(255,255,255,.035)!important}.zodiac-item:hover{background:rgba(231,184,75,.09)!important;box-shadow:0 0 25px rgba(231,184,75,.15)!important}.zodiac-icon{color:#f1c85b!important;text-shadow:none!important}.zodiac-name{color:#f1eee8!important}
+@keyframes jaFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(max-width:850px){.ja20-ai-spotlight{grid-template-columns:1fr;padding:30px 22px}.ja20-ai-orbit{height:220px}.nav-links a{font-size:14px!important}}
+@media(max-width:600px){.hero-banner{min-height:390px;padding:58px 18px!important}.hero-title{font-size:36px!important}.ja20-ai-actions{flex-direction:column}.ja20-btn{width:100%}.ja20-trust-row{gap:10px}.ja20-ai-orbit{height:190px}.ja20-orb{width:105px;height:105px;font-size:56px}.ja20-orbit-card{font-size:11px}.card-a{left:0;top:20px}.card-b{right:0;top:50px}.card-c{left:10px;bottom:10px}}

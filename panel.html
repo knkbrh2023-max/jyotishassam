@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>এডমিন ডেশ্ববৰ্ড - জ্যোতিষ অসম</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans Assamese', 'Poppins', sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; }
+        .container { max-width: 1320px; margin: 0 auto; display: none; }
+        
+        #loginOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .login-card { background: white; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .login-card h2 { color: #6D28D9; margin-bottom: 20px; font-size: 22px; }
+        .login-input { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; }
+        .login-btn { width: 100%; padding: 12px; background: #6D28D9; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; }
+        .login-btn:hover { background: #5b21b6; }
+        .error-msg { color: #e11d48; font-size: 13px; margin-top: 10px; display: none; }
+
+        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; flex-wrap: wrap; gap: 10px; border-bottom: 4px solid #6D28D9; }
+        h1 { color: #6D28D9; font-size: 22px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 18px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 4px solid #6D28D9; }
+        .stat-card h3 { font-size: 13.5px; color: #64748b; margin-bottom: 6px; }
+        .stat-card p { font-size: 24px; font-weight: 700; color: #1e293b; }
+
+        .manual-card { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 2px solid #c084fc; border-radius: 14px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.08); }
+        .manual-header { display: flex; justify-content: space-between; align-items: center; }
+        .manual-header h2 { font-size: 18px; color: #5b21b6; display: flex; align-items: center; gap: 8px; }
+        .manual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 15px; }
+        .manual-field label { display: block; font-size: 12.5px; font-weight: 600; color: #4c1d95; margin-bottom: 5px; }
+        .manual-field input, .manual-field select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-family: inherit; background: white; outline: none; }
+        .btn-manual-submit { background: #6D28D9; color: white; border: none; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 15px; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3); }
+        .btn-manual-submit:hover { background: #5b21b6; }
+        
+        .table-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        th { background: #f1f5f9; color: #475569; font-weight: 600; }
+        tr:hover { background: #f8fafc; }
+        
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; line-height: 1.4; }
+        .badge.auto-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .badge.admin-verified { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+        .badge.pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+        
+        /* Support Messages Badges */
+        .badge.resolved { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .badge.pending-support { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+        
+        .price-tag { font-weight: 700; color: #0f172a; font-size: 15px; }
+        .btn-action { padding: 7px 12px; background: #6D28D9; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin: 2px; font-family: inherit; }
+        .btn-action:hover { background: #5b21b6; }
+        
+        .btn-resolve { padding: 7px 12px; background: #10B981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-resolve:hover { background: #047857; }
+        
+        .btn-reset { padding: 5px 8px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
+        .btn-reset:hover { background: #e2e8f0; color: #0f172a; }
+        
+        .search-box { width: 100%; padding: 10px 15px; margin-bottom: 20px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; }
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>🔒 এডমিন লগইন</h2>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">ডেশ্ববৰ্ড চাবলৈ পাছৱৰ্ড প্ৰদান কৰক</p>
+            <input type="password" id="adminPassword" class="login-input" placeholder="পাছৱৰ্ড লিখক..." onkeypress="if(event.key==='Enter') checkPassword()">
+            <button class="login-btn" onclick="checkPassword()">লগইন কৰক</button>
+            <p id="errorMsg" class="error-msg">ভুল পাছৱৰ্ড! পুনৰ চেষ্টা কৰক।</p>
+        </div>
+    </div>
+
+    <div class="container" id="mainDashboard">
+        <header>
+            <h1>🛠️ জ্যোতিষ অসম - এডমিন ডেশ্ববৰ্ড</h1>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <a href="index.html" style="color: #6D28D9; text-decoration: none; font-weight: 600;">← ৱেবছাইটলৈ যাওক</a>
+                <button onclick="logout()" style="padding: 6px 12px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">লগআউট</button>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>মুঠ অৰ্ডাৰ (Total Orders)</h3>
+                <p id="totalOrders">লোড হৈ আছে...</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #059669; background: #ecfdf5;">
+                <h3 style="color: #065f46; font-weight: 600;">💰 মুঠ উপাৰ্জন (Total Revenue)</h3>
+                <p id="totalRevenue" style="color: #047857;">₹0</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #15803d;">
+                <h3>🟢 স্বয়ংক্ৰিয়ভাৱে সফল (গ্ৰাহকে নিজে পালে)</h3>
+                <p id="autoSuccessOrders">লোড হৈ আছে...</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #1d4ed8;">
+                <h3>🔵 এডমিনৰ দ্বাৰা পৰীক্ষিত (আপুনি খুলি চালে)</h3>
+                <p id="adminVerifiedOrders">লোড হৈ আছে...</p>
+            </div>
+        </div>
+
+        <!-- পোনপটীয়াকৈ নতুন ৰিপোৰ্ট বনোৱা বক্স -->
+        <div class="manual-card">
+            <div class="manual-header">
+                <h2>➕ পোনপটীয়াকৈ নতুন ৰিপোৰ্ট বনাওক (Manual Order)</h2>
+            </div>
+            <div class="manual-grid">
+                <div class="manual-field">
+                    <label>গ্ৰাহকৰ নাম *</label>
+                    <input type="text" id="mName" placeholder="যেনে: মৌপ্ৰিয়া ৰাভা">
+                </div>
+                <div class="manual-field">
+                    <label>ইমেইল বা ফোন (ঐচ্ছিক)</label>
+                    <input type="text" id="mEmail" placeholder="ইমেইল বা ফোন নম্বৰ...">
+                </div>
+                <div class="manual-field">
+                    <label>সেৱাৰ প্ৰকাৰ *</label>
+                    <select id="mService" onchange="updateManualPrice()">
+                        <option value="chat">আচাৰ্যৰ লগত কথা পাতক (₹21)</option>
+                        <option value="monthly">মাহেকীয়া ৰাশিফল (₹19)</option>
+                        <option value="yearly">বাৰ্ষিক ৰাশিফল (₹49)</option>
+                        <option value="love">প্ৰেম আৰু সম্পৰ্ক (₹99)</option>
+                        <option value="career">কেৰিয়াৰ আৰু ব্যৱসায় (₹199)</option>
+                        <option value="birth">সম্পূৰ্ণ জন্ম কুণ্ডলী (₹299)</option>
+                    </select>
+                </div>
+                <div class="manual-field">
+                    <label>মূল্য (₹) *</label>
+                    <input type="number" id="mAmount" value="21">
+                </div>
+                <div class="manual-field">
+                    <label>জন্ম তাৰিখ (DOB) *</label>
+                    <input type="date" id="mDob">
+                </div>
+                <div class="manual-field">
+                    <label>জন্মৰ সময় (Time)</label>
+                    <input type="time" id="mTob" value="10:30">
+                </div>
+                <div class="manual-field">
+                    <label>জন্ম স্থান (Place) *</label>
+                    <input type="text" id="mPlace" placeholder="যেনে: গুৱাহাটী, অসম">
+                </div>
+            </div>
+            <button class="btn-manual-submit" onclick="createManualOrderAndReport()">⚡ সম্পূৰ্ণ ৰিপোৰ্ট উলিয়াওক আৰু তালিকাত ছেভ কৰক</button>
+        </div>
+
+        <!-- গ্ৰাহকৰ অৰ্ডাৰৰ তালিকা -->
+        <div class="table-container">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: #1e293b;">📜 গ্ৰাহকৰ অৰ্ডাৰ আৰু পেমেন্ট তালিকা</h2>
+            <input type="text" id="searchInput" class="search-box" placeholder="নাম, ঠাই বা ইমেইল দি বিচাৰক..." onkeyup="filterTable()">
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>তাৰিখ</th>
+                        <th>নাম</th>
+                        <th>ইমেইল / ফোন</th>
+                        <th>সেৱা (Service)</th>
+                        <th>মূল্য (Amount)</th>
+                        <th>জন্মৰ বিৱৰণ (DOB / Time / Place)</th>
+                        <th>স্থিতি (Status)</th>
+                        <th>ৰিপোৰ্ট (Action)</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="8" style="text-align: center; padding: 20px;">ডাটা লোড হৈ আছে...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 🔥 নতুন: গ্ৰাহকৰ সমস্যা (Support Messages) তালিকা 🔥 -->
+        <div class="table-container" style="border-top: 4px solid #10B981;">
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: #047857;">🎧 গ্ৰাহকৰ সহায়ক বাৰ্তা (Support Messages)</h2>
+            <button onclick="fetchSupportMessages()" style="padding: 5px 10px; margin-bottom: 15px; background: #e2e8f0; border: none; border-radius: 5px; cursor: pointer;">🔄 ৰিফ্ৰেছ কৰক</button>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">তাৰিখ</th>
+                        <th style="width: 15%;">নাম</th>
+                        <th style="width: 15%;">যোগাযোগ (Contact)</th>
+                        <th style="width: 35%;">সমস্যা (Message)</th>
+                        <th style="width: 13%;">স্থিতি (Status)</th>
+                        <th style="width: 10%;">একচন</th>
+                    </tr>
+                </thead>
+                <tbody id="supportTableBody">
+                    <tr><td colspan="6" style="text-align: center; padding: 20px;">মেছেজ লোড হৈ আছে...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const CORRECT_PASSWORD = "Kanak@123";
+        const SUPABASE_URL = "https://ihbdrtnkfitytklonnel.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_aM1N898qE1gsw22dyxIoZQ_HTh_Qprj";
+        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const SERVICE_PRICES = {
+            'monthly': 19,
+            'yearly': 49,
+            'chat': 21,
+            'love': 99,
+            'career': 199,
+            'birth': 299
+        };
+
+        let allOrders = [];
+        let localAdminViewedIds = JSON.parse(localStorage.getItem('ja_admin_viewed_ids') || '[]');
+        let localManualOrders = JSON.parse(localStorage.getItem('ja_manual_orders') || '[]');
+        let localCustomAmounts = JSON.parse(localStorage.getItem('ja_custom_amounts') || '{}');
+
+        function updateManualPrice() {
+            const srv = document.getElementById('mService').value;
+            document.getElementById('mAmount').value = SERVICE_PRICES[srv] || 49;
+        }
+
+        function getOrderAmount(o) {
+            if (localCustomAmounts[String(o.id)]) {
+                return Number(localCustomAmounts[String(o.id)]);
+            }
+            const srv = String(o.service || '').toLowerCase().trim();
+            if (SERVICE_PRICES[srv]) {
+                return SERVICE_PRICES[srv];
+            }
+            if (o.amount && !isNaN(Number(o.amount))) {
+                const val = Number(o.amount);
+                return val > 2000 ? Math.round(val / 100) : val;
+            }
+            return 49;
+        }
+
+        function getOrderStatusType(o) {
+            const payId = String(o.razorpay_payment_id || '');
+            if (payId && !payId.startsWith('pay_Admin')) {
+                return 'auto';
+            }
+            if (payId.startsWith('pay_Admin') || localAdminViewedIds.includes(String(o.id))) {
+                return 'admin';
+            }
+            return 'pending';
+        }
+
+        function checkPassword() {
+            const enteredPass = document.getElementById('adminPassword').value;
+            if (enteredPass === CORRECT_PASSWORD) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                fetchOrders();
+                fetchSupportMessages(); // নতুন Support ডাটা লোড কৰা
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            location.reload();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                fetchOrders();
+                fetchSupportMessages(); // নতুন Support ডাটা লোড কৰা
+            }
+        });
+
+        // -----------------------------------------------------
+        // 1. ORDERS ENGINE (আগৰখিনি একেই আছে)
+        // -----------------------------------------------------
+        async function fetchOrders() {
+            try {
+                const { data, error } = await sbClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const dbOrders = data || [];
+                const dbIds = new Set(dbOrders.map(o => String(o.id)));
+                const unsyncedManual = localManualOrders.filter(m => !dbIds.has(String(m.id)));
+
+                allOrders = [...unsyncedManual, ...dbOrders];
+                renderTable(allOrders);
+                updateStats(allOrders);
+            } catch (err) {
+                document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">ডাটা লোড কৰাত সমস্যা হৈছে: ${err.message}</td></tr>`;
+            }
+        }
+
+        function updateStats(orders) {
+            document.getElementById('totalOrders').innerText = orders.length;
+            const autoOrders = orders.filter(o => getOrderStatusType(o) === 'auto');
+            const adminOrders = orders.filter(o => getOrderStatusType(o) === 'admin');
+            
+            document.getElementById('autoSuccessOrders').innerText = autoOrders.length;
+            document.getElementById('adminVerifiedOrders').innerText = adminOrders.length;
+
+            const totalRev = [...autoOrders, ...adminOrders].reduce((sum, o) => sum + getOrderAmount(o), 0);
+            document.getElementById('totalRevenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
+        }
+
+        function renderTable(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">কোনো অৰ্ডাৰ পোৱা হোৱা নাই।</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(o => {
+                const statusType = getOrderStatusType(o);
+                const amount = getOrderAmount(o);
+                let badgeHtml = '';
+
+                if (statusType === 'auto') {
+                    badgeHtml = `<span class="badge auto-success">🟢 স্বয়ংক্ৰিয়ভাৱে সফল<br><small style="font-weight:400;">(গ্ৰাহকে নিজে পালে)</small></span>`;
+                } else if (statusType === 'admin') {
+                    badgeHtml = `<span class="badge admin-verified">🔵 এডমিনৰ দ্বাৰা পৰীক্ষিত</span>`;
+                } else {
+                    badgeHtml = `<span class="badge pending">🟡 পেনণ্ডিং (Pending)</span>`;
+                }
+
+                return `
+                <tr>
+                    <td>${new Date(o.created_at).toLocaleDateString('as-IN')}</td>
+                    <td><strong>${o.name || 'N/A'}</strong></td>
+                    <td>${o.email || 'N/A'}</td>
+                    <td>${o.service || 'N/A'}</td>
+                    <td><span class="price-tag">₹${amount}</span></td>
+                    <td>${o.birth_date || ''} | ${o.birth_time || ''} | ${o.birth_place || ''}</td>
+                    <td>${badgeHtml}</td>
+                    <td>
+                        <button class="btn-action" onclick="generateAndShowReport('${o.id}')">ৰিপোৰ্ট চাওক</button>
+                        ${statusType === 'admin' ? `<button class="btn-reset" title="আকৌ পেনণ্ডিং কৰক" onclick="resetToPending('${o.id}')">↺</button>` : ''}
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allOrders.filter(o => 
+                (o.name && o.name.toLowerCase().includes(query)) || 
+                (o.email && o.email.toLowerCase().includes(query)) ||
+                (o.birth_place && o.birth_place.toLowerCase().includes(query))
+            );
+            renderTable(filtered);
+        }
+
+        // -----------------------------------------------------
+        // 2. SUPPORT MESSAGES ENGINE (নতুনকৈ যোগ কৰা)
+        // -----------------------------------------------------
+        async function fetchSupportMessages() {
+            try {
+                const { data, error } = await sbClient
+                    .from('support_messages')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                renderSupportTable(data || []);
+            } catch (err) {
+                document.getElementById('supportTableBody').innerHTML = `<tr><td colspan="6" style="text-align: center; color: red;">সমস্যা লোড কৰাত বিজুতি: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderSupportTable(messages) {
+            const tbody = document.getElementById('supportTableBody');
+            if (messages.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">এতিয়ালৈকে কোনো গ্ৰাহকৰ সমস্যা বা মেছেজ নাই।</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = messages.map(m => {
+                const isResolved = m.status === 'resolved';
+                
+                const badge = isResolved 
+                    ? `<span class="badge resolved">✅ সমাধান হ'ল</span>` 
+                    : `<span class="badge pending-support">⏳ পেনণ্ডিং</span>`;
+                
+                const actionBtn = isResolved 
+                    ? `<button class="btn-reset" onclick="updateSupportStatus('${m.id}', 'pending')">↺ পেনণ্ডিং কৰক</button>` 
+                    : `<button class="btn-resolve" onclick="updateSupportStatus('${m.id}', 'resolved')">✔️ সমাধান কৰক</button>`;
+                
+                return `
+                <tr>
+                    <td>${new Date(m.created_at).toLocaleDateString('as-IN')}</td>
+                    <td><strong>${m.name}</strong></td>
+                    <td>${m.contact || 'N/A'}</td>
+                    <td style="word-break: break-word;">${m.message}</td>
+                    <td>${badge}</td>
+                    <td>${actionBtn}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function updateSupportStatus(id, newStatus) {
+            try {
+                const btnText = newStatus === 'resolved' ? "সমাধান কৰি আছোঁ..." : "আপডেট কৰি আছোঁ...";
+                await sbClient.from('support_messages').update({ status: newStatus }).eq('id', id);
+                fetchSupportMessages(); // টেবুলখন ৰিফ্ৰেছ কৰক
+            } catch (err) {
+                alert("ষ্টেটাছ আপডেট কৰাত সমস্যা হৈছে!");
+            }
+        }
+
+
+        // -----------------------------------------------------
+        // 3. MANUAL ORDER & PDF GENERATOR (পুৰণি লজিকসমূহ)
+        // -----------------------------------------------------
+        async function createManualOrderAndReport() {
+            const name = document.getElementById('mName').value.trim();
+            const email = document.getElementById('mEmail').value.trim() || 'WhatsApp/Manual';
+            const service = document.getElementById('mService').value;
+            const amount = Number(document.getElementById('mAmount').value) || SERVICE_PRICES[service] || 19;
+            const birth_date = document.getElementById('mDob').value;
+            const birth_time = document.getElementById('mTob').value || '10:30';
+            const birth_place = document.getElementById('mPlace').value.trim() || 'অসম';
+
+            if (!name || !birth_date) {
+                alert("অনুগ্ৰহ কৰি গ্ৰাহকৰ নাম আৰু জন্ম তাৰিখ পূৰণ কৰক!");
+                return;
+            }
+
+            const manualPayId = "pay_AdminManual_" + Date.now();
+            let newOrder = {
+                id: "manual_" + Date.now(),
+                created_at: new Date().toISOString(),
+                name: name, email: email, service: service,
+                birth_date: birth_date, birth_time: birth_time, birth_place: birth_place,
+                razorpay_payment_id: manualPayId, payment_status: 'paid', status: 'paid', amount: amount
+            };
+
+            try {
+                const { data, error } = await sbClient.from('orders').insert([{
+                    name: name, email: email, service: service,
+                    birth_date: birth_date, birth_time: birth_time, birth_place: birth_place,
+                    razorpay_payment_id: manualPayId
+                }]).select();
+
+                if (!error && data && data.length > 0) {
+                    newOrder = { ...data[0], amount: amount, razorpay_payment_id: manualPayId };
+                } else {
+                    localManualOrders.unshift(newOrder);
+                    localStorage.setItem('ja_manual_orders', JSON.stringify(localManualOrders));
+                }
+            } catch (e) {
+                localManualOrders.unshift(newOrder);
+                localStorage.setItem('ja_manual_orders', JSON.stringify(localManualOrders));
+            }
+
+            localCustomAmounts[String(newOrder.id)] = amount;
+            localStorage.setItem('ja_custom_amounts', JSON.stringify(localCustomAmounts));
+
+            if (!localAdminViewedIds.includes(String(newOrder.id))) {
+                localAdminViewedIds.push(String(newOrder.id));
+                localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+            }
+
+            allOrders.unshift(newOrder);
+            renderTable(allOrders);
+            updateStats(allOrders);
+
+            generateAndShowReport(newOrder.id);
+        }
+
+        async function resetToPending(orderId) {
+            const order = allOrders.find(o => String(o.id) === String(orderId));
+            if (!order) return;
+            try {
+                await sbClient.from('orders').update({
+                    razorpay_payment_id: null,
+                    payment_status: 'pending',
+                    status: 'pending'
+                }).eq('id', order.id);
+            } catch (e) {}
+
+            order.razorpay_payment_id = null;
+            order.payment_status = 'pending';
+            localAdminViewedIds = localAdminViewedIds.filter(id => id !== String(order.id));
+            localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+            renderTable(allOrders);
+            updateStats(allOrders);
+        }
+
+        // ফলবেক কুষ্টি মেকাৰ
+        function buildFallbackVedicChart(dobStr, tobStr) {
+            const rashis = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+            const naks = ["অশ্বিনী", "ভৰণী", "কৃত্তিকা", "ৰোহিণী", "মৃগশিৰা", "আৰ্দ্বা", "পুনৰ্বসু", "পুষ্যা", "অশ্লেষা", "মঘা", "পূৰ্বফাল্গুনী", "উত্তৰফাল্গুনী", "হস্তা", "চিত্ৰা", "স্বাতী", "বিশাখা", "অনুৰাধা", "জ্যেষ্ঠা", "মূলা", "পূৰ্বাষাঢ়া", "উত্তৰাষাঢ়া", "শ্ৰৱণা", "ধনিষ্ঠা", "শতভিষা", "পূৰ্বভাদ্ৰপদ", "উত্তৰভাদ্ৰপদ", "ৰেৱতী"];
+            
+            const parts = String(dobStr || "1993-05-01").split(/[-/]/);
+            const y = parseInt(parts[0], 10) || 1993;
+            const m = parseInt(parts[1], 10) || 5;
+            const d = parseInt(parts[2], 10) || 1;
+
+            const tParts = String(tobStr || "10:30").split(":");
+            const hr = parseInt(tParts[0], 10) || 10;
+            const mn = parseInt(tParts[1], 10) || 30;
+
+            let sunRashiIdx = ((m - 4 + 12) % 12);
+            if (d < 14) sunRashiIdx = (sunRashiIdx + 11) % 12;
+
+            const hoursSinceSunrise = ((hr + mn / 60) - 6 + 24) % 24;
+            const ascIdx = (sunRashiIdx + Math.floor(hoursSinceSunrise / 2)) % 12;
+
+            const jd = Math.floor(365.25 * y) + Math.floor(30.6001 * (m + 1)) + d + (hr / 24);
+            const moonDeg = (((jd * 13.176396) % 360) + 360) % 360;
+            const moonIdx = Math.floor(moonDeg / 30) % 12;
+            const moonNak = naks[Math.floor(moonDeg / (360 / 27)) % 27];
+
+            const seed = y + m * 31 + d;
+            const makePlanet = (rIdx, offset) => ({
+                rashi: rashis[rIdx % 12],
+                rashi_no: (rIdx % 12) + 1,
+                nakshatra: naks[(rIdx * 2 + offset) % 27],
+                pada: ((seed + offset) % 4) + 1
+            });
+
+            const planets = {
+                Sun: makePlanet(sunRashiIdx, 1),
+                Moon: { rashi: rashis[moonIdx], rashi_no: moonIdx + 1, nakshatra: moonNak, pada: (d % 4) + 1 },
+                Mars: makePlanet((sunRashiIdx + (seed % 7)) % 12, 2),
+                Mercury: makePlanet((sunRashiIdx + (d % 2 === 0 ? 0 : 1)) % 12, 3),
+                Jupiter: makePlanet((Math.floor((y - 1980) * 1.01) + 3) % 12, 4),
+                Venus: makePlanet((sunRashiIdx + (m % 2 === 0 ? 0 : 11)) % 12, 5),
+                Saturn: makePlanet(Math.floor(((y - 1980) * 0.4) + 5) % 12, 6),
+                Rahu: makePlanet((12 - Math.floor(((y - 1980) * 0.65) % 12)) % 12, 7)
+            };
+            const ketuIdx = (planets.Rahu.rashi_no - 1 + 6) % 12;
+            planets.Ketu = makePlanet(ketuIdx, 8);
+
+            const houses = [];
+            for (let i = 0; i < 12; i++) {
+                houses.push({ house: i + 1, rashi: rashis[(ascIdx + i) % 12], rashi_no: ((ascIdx + i) % 12) + 1 });
+            }
+
+            const dashaLords = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"];
+            const dashaYears = [7, 20, 6, 10, 7, 18, 16, 19, 17];
+            const startLordIdx = Math.floor(moonDeg / (360 / 27)) % 9;
+            const dashas = [];
+            let curYear = y;
+            for (let i = 0; i < 8; i++) {
+                const lIdx = (startLordIdx + i) % 9;
+                const sDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                curYear += dashaYears[lIdx];
+                const eDate = `${curYear}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                dashas.push({ lord: dashaLords[lIdx], start_date: sDate, end_date: eDate });
+            }
+
+            return { ascendant: { rashi: rashis[ascIdx], rashi_no: ascIdx + 1 }, planets: planets, houses: houses, dashas: dashas };
+        }
+
+        async function generateAndShowReport(orderId) {
+            const order = allOrders.find(o => String(o.id) === String(orderId));
+            if (!order) return alert("অৰ্ডাৰৰ ডাটা পোৱা নগল!");
+
+            if (order.service === 'chat') {
+                alert("এইটো এটা 'আচাৰ্যৰ লগত কথা পাতক' (Chat) অৰ্ডাৰ। ইয়াৰ কোনো PDF ৰিপোৰ্ট নাথাকে। গ্ৰাহকে ৱেবছাইটত লাইভ চেট কৰিব।");
+                
+                // এডমিন হিচাপে mark কৰা
+                if (!order.razorpay_payment_id) {
+                    const adminTag = "pay_AdminView_" + Date.now();
+                    try { await sbClient.from('orders').update({ razorpay_payment_id: adminTag, payment_status: "paid", status: "paid" }).eq('id', order.id); } catch(e){}
+                    order.razorpay_payment_id = adminTag;
+                    if (!localAdminViewedIds.includes(String(order.id))) {
+                        localAdminViewedIds.push(String(order.id));
+                        localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+                    }
+                    renderTable(allOrders); updateStats(allOrders);
+                }
+                return;
+            }
+
+            const serviceNameMap = {
+                'birth': 'সম্পূৰ্ণ জন্ম কুণ্ডলী (Complete Birth Chart)',
+                'love': 'প্ৰেম আৰু সম্পৰ্ক পৰামৰ্শ (Love & Relationship Reading)',
+                'career': 'কেৰিয়াৰ আৰু ব্যৱসায় পূর্বাভাস (Career & Business Forecast)',
+                'monthly': 'মাহেকীয়া ৰাশিফল (Monthly Horoscope)',
+                'yearly': 'বাৰ্ষিক ৰাশিফল (Yearly Horoscope)'
+            };
+            const serviceTitle = serviceNameMap[order.service] || order.service || 'প্ৰিমিয়াম জ্যোতিষ সেৱা';
+            const service = order.service || 'birth';
+            const name = order.name || 'গ্ৰাহক';
+            const dob = order.birth_date || 'N/A';
+            const tob = order.birth_time || '10:30';
+            const place = order.birth_place || 'অসম';
+            const amount = getOrderAmount(order);
+
+            try {
+                if (!order.razorpay_payment_id) {
+                    const adminTag = "pay_AdminView_" + Date.now();
+                    try { await sbClient.from('orders').update({ razorpay_payment_id: adminTag, payment_status: "paid", status: "paid" }).eq('id', order.id); } catch (e) {}
+                    order.razorpay_payment_id = adminTag;
+                    if (!localAdminViewedIds.includes(String(order.id))) {
+                        localAdminViewedIds.push(String(order.id));
+                        localStorage.setItem('ja_admin_viewed_ids', JSON.stringify(localAdminViewedIds));
+                    }
+                    renderTable(allOrders); updateStats(allOrders);
+                }
+
+                let chart = null;
+                if (order.public_order_id) {
+                    try {
+                        const response = await fetch(SUPABASE_URL + '/functions/v1/calculate-chart', {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ orderId: order.public_order_id, adminBypass: true })
+                        });
+                        const data = await response.json();
+                        if (response.ok && data.success && data.chart) { chart = data.chart; }
+                    } catch (apiErr) {}
+                }
+
+                if (!chart) { chart = buildFallbackVedicChart(dob, tob); }
+
+                let currentDasha = "Moon";
+                let today = new Date();
+                chart.dashas.forEach(d => {
+                    let start = new Date(d.start_date);
+                    let end = new Date(d.end_date);
+                    if (today >= start && today <= end) currentDasha = d.lord;
+                });
+
+                const rashiAsMap = {
+                    "Aries": "মেষ", "Taurus": "বৃষ", "Gemini": "মিথুন", "Cancer": "কৰ্কট",
+                    "Leo": "সিংহ", "Virgo": "কন্যা", "Libra": "তুলা", "Scorpio": "বৃশ্চিক",
+                    "Sagittarius": "ধনু", "Capricorn": "মকৰ", "Aquarius": "কুম্ভ", "Pisces": "মীন"
+                };
+                const planetNames = { Sun: "সূৰ্য", Moon: "চন্দ্ৰ", Mars: "মংগল", Mercury: "বুধ", Jupiter: "বৃহস্পতি", Venus: "শুক্ৰ", Saturn: "শনি", Rahu: "ৰাহু", Ketu: "কেতু" };
+                const pAbbr = { Sun: "সূ", Moon: "চ", Mars: "মং", Mercury: "বু", Jupiter: "বৃ", Venus: "শু", Saturn: "শ", Rahu: "ৰা", Ketu: "কে" };
+                const currentDashaAs = planetNames[currentDasha] || currentDasha;
+
+                const ascRashi = chart.ascendant.rashi_no;
+                let hC = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
+                let hFull = {1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[]};
+                for(const [pName, pData] of Object.entries(chart.planets)) {
+                    let hNum = (pData.rashi_no - ascRashi + 12) % 12 + 1;
+                    hC[hNum].push(pAbbr[pName] || pName);
+                    hFull[hNum].push(planetNames[pName] || pName);
+                }
+
+                let planetsHtml = `<table class="vedic-table"><thead><tr><th>গ্ৰহ</th><th>ৰাশি</th><th>ঘৰ (House)</th><th>নক্ষত্ৰ</th><th>পদ</th></tr></thead><tbody>`;
+                for(const key in chart.planets) {
+                    let hNum = (chart.planets[key].rashi_no - ascRashi + 12) % 12 + 1;
+                    let rEn = chart.planets[key].rashi;
+                    planetsHtml += `<tr><td><strong>${planetNames[key] || key} (${key})</strong></td><td>${rashiAsMap[rEn] || rEn} (${rEn})</td><td>${hNum}</td><td>${chart.planets[key].nakshatra}</td><td>${chart.planets[key].pada}</td></tr>`;
+                }
+                planetsHtml += `</tbody></table>`;
+
+                let dashaHtml = `<table class="vedic-table"><thead><tr><th>মহা দশা</th><th>আৰম্ভণি (Start)</th><th>অন্ত (End)</th></tr></thead><tbody>`;
+                chart.dashas.forEach(d => {
+                    dashaHtml += `<tr><td><strong>${planetNames[d.lord] || d.lord} (${d.lord})</strong></td><td>${d.start_date}</td><td>${d.end_date}</td></tr>`;
+                });
+                dashaHtml += `</tbody></table>`;
+
+                let svgHtml = `
+                <div class="kundali-wrapper">
+                    <svg viewBox="0 0 300 300" width="270" height="270" style="background: #fdf5e6; border: 3px solid #8b0000;">
+                        <rect x="0" y="0" width="300" height="300" fill="none" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="0" x2="300" y2="300" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="300" x2="300" y2="0" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="150" y1="0" x2="300" y2="150" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="300" y1="150" x2="150" y2="300" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="150" y1="300" x2="0" y2="150" stroke="#8b0000" stroke-width="2"/>
+                        <line x1="0" y1="150" x2="150" y2="0" stroke="#8b0000" stroke-width="2"/>
+                        
+                        <text x="150" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[1].join(', ')}</text> <text x="150" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${ascRashi}</text>
+                        <text x="75" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[2].join(', ')}</text> <text x="100" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi)%12+1}</text>
+                        <text x="45" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[3].join(', ')}</text> <text x="25" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+1)%12+1}</text>
+                        <text x="90" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[4].join(', ')}</text> <text x="130" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+2)%12+1}</text>
+                        <text x="45" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[5].join(', ')}</text> <text x="25" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+3)%12+1}</text>
+                        <text x="75" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[6].join(', ')}</text> <text x="100" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+4)%12+1}</text>
+                        <text x="150" y="230" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[7].join(', ')}</text> <text x="150" y="200" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+5)%12+1}</text>
+                        <text x="225" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[8].join(', ')}</text> <text x="200" y="285" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+6)%12+1}</text>
+                        <text x="255" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[9].join(', ')}</text> <text x="280" y="210" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+7)%12+1}</text>
+                        <text x="210" y="145" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[10].join(', ')}</text> <text x="170" y="155" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+8)%12+1}</text>
+                        <text x="255" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[11].join(', ')}</text> <text x="280" y="100" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+9)%12+1}</text>
+                        <text x="225" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#3e2723">${hC[12].join(', ')}</text> <text x="200" y="25" text-anchor="middle" font-size="11" fill="#8b0000">${(ascRashi+10)%12+1}</text>
+                    </svg>
+                </div>`;
+
+                let housesAnalysisPage = "";
+                if (service === 'birth') {
+                    const houseNames = [
+                        "১ম ঘৰ (লগ্ন ভাৱ - ব্যক্তিত্ব, দেহ আৰু আত্মা)", "২য় ঘৰ (ধন ভাৱ - সঞ্চয়, বাণী আৰু কুটুম্ব)", "৩য় ঘৰ (সহজ ভাৱ - সাহস, পৰাক্ৰম আৰু ভাতৃ-ভগ্নী)",
+                        "৪ৰ্থ ঘৰ (সুখ ভাৱ - মাতৃ, গৃহ, বাহন আৰু সম্পত্তি)", "৫ম ঘৰ (সন্তান ভাৱ - বিদ্যা, বুদ্ধি, প্ৰেম আৰু পূৰ্বপুণ্য)", "৬ষ্ঠ ঘৰ (ৰিপু ভাৱ - ৰোগ, ঋণ, শত্ৰু আৰু প্ৰতিযোগিতা)",
+                        "৭ম ঘৰ (জায়া ভাৱ - বিবাহ, জীৱনসংগী আৰু অংশীদাৰীত্ব)", "৮ম ঘৰ (আয়ু ভাৱ - দীৰ্ঘায়ু, গুপ্ত বিদ্যা আৰু আকস্মিক পৰিৱৰ্তন)", "৯ম ঘৰ (ভাগ্য ভাৱ - ধৰ্ম, পিতৃ, উচ্চ শিক্ষা আৰু সৌভাগ্য)",
+                        "১০ম ঘৰ (কৰ্ম ভাৱ - বৃত্তি, পদবী, সন্মান আৰু সামাজিক খ্যাতি)", "১১তম ঘৰ (লাভ ভাৱ - আয়, ইচ্ছাপূৰণ আৰু জ্যেষ্ঠ ভাতৃ-মিত্ৰ)", "১২তম ঘৰ (ব্যয় ভাৱ - খৰচ, বিদেশ যাত্ৰা, শয্যাসুখ আৰু মোক্ষ)"
+                    ];
+                    const buildHouseCards = (startHouse, endHouse) => {
+                        let cardsHtml = "";
+                        for (let i = startHouse; i <= endHouse; i++) {
+                            const rashiEn = chart?.houses?.[i - 1]?.rashi || "Aries";
+                            const hasPlanets = hFull[i] && hFull[i].length > 0;
+                            const pInH = hasPlanets ? hFull[i].join(', ') : "কোনো গ্ৰহ নাই (ভাৱাধিপতিৰ দ্বাৰা নিয়ন্ত্ৰিত)";
+                            cardsHtml += `
+                            <div class="info-card">
+                                <div class="card-title">${houseNames[i - 1]}</div>
+                                <div class="card-content">
+                                    <strong>উদিত ৰাশি:</strong> ${rashiAsMap[rashiEn] || rashiEn} (${rashiEn}) &nbsp;|&nbsp; 
+                                    <strong>অৱস্থিত গ্ৰহ:</strong> ${pInH}<br><br>
+                                    এই ভাৱত <strong>${rashiAsMap[rashiEn] || rashiEn}</strong> ৰাশিৰ প্ৰভাৱ থকাৰ বাবে আপোনাৰ জীৱনৰ এই ক্ষেত্ৰটোত স্থায়িত্ব আৰু ফল ক্ৰমান্বয়ে বৃদ্ধি পাব।
+                                </div>
+                            </div>`;
+                        }
+                        return cardsHtml;
+                    };
+                    housesAnalysisPage = `
+                    <div class="page page-break"><h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (১ম - ৬ষ্ঠ ঘৰ) ❁</h2>${buildHouseCards(1, 6)}</div>
+                    <div class="page page-break"><h2 class="section-title">❁ দ্বাদশ ভাৱৰ বিস্তৃত বিশ্লেষণ (৭ম - ১২তম ঘৰ) ❁</h2>${buildHouseCards(7, 12)}</div>`;
+                }
+
+                let careerAnalysisPage = "";
+                if (service === 'birth' || service === 'career') {
+                    const tenthRashi = chart?.houses?.[9]?.rashi || "Aries";
+                    careerAnalysisPage = `
+                    <div class="page page-break">
+                        <h2 class="section-title">❁ কৰ্মজীৱন, ব্যৱসায় আৰু অৰ্থ বিশ্লেষণ ❁</h2>
+                        <div class="sub-heading">১. দশম ভাৱ আৰু কৰ্মজীৱনৰ মূল দিশ (Career Direction)</div>
+                        <div class="info-card"><div class="card-content">আপোনাৰ জন্ম কুণ্ডলীৰ দশম ভাৱত <strong>${rashiAsMap[tenthRashi] || tenthRashi} (${tenthRashi})</strong> ৰাশি উদিত হৈছে। বৰ্তমান চলি থকা <strong>${currentDashaAs} মহাদশা</strong>ৰ প্ৰভাৱত বয়স বঢ়াৰ লগে লগে আপোনাৰ কৰ্মদক্ষতা আৰু আৰ্থিক সঞ্চয় বৃদ্ধি পাব।</div></div>
+                        <div class="sub-heading">২. ২০২৬ – ২০৩১ বৰ্ষৰ কেৰিয়াৰ সময়ৰেখা</div>
+                        <div class="info-card"><div class="card-content">
+                            <strong>📅 ২০২৬ – ২০২৭ বৰ্ষ:</strong> কৰ্মক্ষেত্ৰত নতুন দায়িত্ব, আৰ্থিক স্থিৰতা।<br><br>
+                            <strong>📅 ২০২৮ – ২০২৯ বৰ্ষ:</strong> পদোন্নতি, ব্যৱসায় সম্প্ৰসাৰণ আৰু নতুন আয়ৰ পথ।<br><br>
+                            <strong>📅 ২০৩০ – ২০৩১ বৰ্ষ:</strong> স্থায়ী সম্পত্তি আৰু দীর্ঘম্যাদী বিনিয়োগৰ পৰা বিশেষ লাভ।
+                        </div></div>
+                    </div>`;
+                }
+
+                let loveAnalysisPage = "";
+                if (service === 'birth' || service === 'love') {
+                    const moonRashi = chart?.planets?.Moon?.rashi || "Leo";
+                    const seventhHouseRashi = chart?.houses?.[6]?.rashi || "Capricorn";
+                    loveAnalysisPage = `
+                    <div class="page page-break">
+                        <h2 class="section-title">❁ প্ৰেম, বিবাহ আৰু সম্পৰ্ক বিশ্লেষণ ❁</h2>
+                        <div class="sub-heading">১. আপোনাৰ প্ৰেমৰ স্বভাৱ</div>
+                        <div class="info-card"><div class="card-content">চন্দ্ৰ ৰাশি হৈছে <strong>${rashiAsMap[moonRashi] || moonRashi}</strong>। আপুনি প্ৰেমৰ সম্পৰ্কত অত্যন্ত যত্নশীল আৰু বিশ্বস্ত।</div></div>
+                        
+                        <div class="sub-heading">২. সপ্তম ভাৱ আৰু ভৱিষ্যত সংগী</div>
+                        <div class="info-card"><div class="card-content">সপ্তম ভাৱত <strong>${rashiAsMap[seventhHouseRashi] || seventhHouseRashi}</strong> ৰাশি উদিত হৈছে। সংগী দায়িত্বশীল স্বভাৱৰ হ'ব।</div></div>
+                        
+                        <div class="sub-heading">❁ ২০২৬ – ২০৩১ প্ৰেম আৰু সম্পৰ্ক পূর্বাভাস ❁</div>
+                        <div class="info-card"><div class="card-content">২০২৭-২০২৯ বৰ্ষত বিবাহ আৰু সম্পৰ্কত গভীৰতা আহিব। ২০৩০ বৰ্ষত স্থায়ী সুখ আৰু সমৃদ্ধি লাভ হ'ব।</div></div>
+                    </div>`;
+                }
+
+                let extraAnalysisPage = "";
+                if (service === 'monthly' || service === 'yearly') {
+                    const mMoonRashi = chart?.planets?.Moon?.rashi || "Aries";
+                    extraAnalysisPage = `
+                    <div class="page page-break">
+                        <h2 class="section-title">❁ বিশেষ ভৱিষ্যৎফল ❁</h2>
+                        <div class="info-card"><div class="card-content">আপোনাৰ চন্দ্ৰ ৰাশি <strong>${rashiAsMap[mMoonRashi] || mMoonRashi}</strong> আৰু বৰ্তমান চলি থকা <strong>${currentDashaAs} মহাদশা</strong>ৰ ফলত আগন্তুক সময়ছোৱা আপোনাৰ বাবে অনুকূল থাকিব। কৰ্মক্ষেত্ৰ আৰু প্ৰেমৰ দিশত ভাল খবৰ আহিব।</div></div>
+                    </div>`;
+                }
+
+                const rLagnaRashi = chart?.ascendant?.rashi || "Cancer";
+                const gemstoneGuide = {
+                    "Aries": { gem: "ৰক্ত প্ৰবাল (Red Coral)", alt: "মাণিক্য", metal: "সোণ বা তাম", finger: "অনামিকা", day: "মঙলবাৰে পুৱা", lord: "মংগল" },
+                    "Taurus": { gem: "বগা ওপাল (White Opal)", alt: "নীলা", metal: "ৰূপ", finger: "মাজু আঙুলি", day: "শুক্ৰবাৰে পুৱা", lord: "শুক্ৰ" },
+                    "Gemini": { gem: "পান্না (Emerald)", alt: "বগা ওপাল", metal: "সোণ বা ৰূপ", finger: "কনিষ্ঠা", day: "বুধবাৰে পুৱা", lord: "বুধ" },
+                    "Cancer": { gem: "মুকুতা (Natural Pearl)", alt: "ৰক্ত প্ৰবাল", metal: "ৰূপ (Silver)", finger: "কনিষ্ঠা বা অনামিকা", day: "সোমবাৰে পুৱা", lord: "চন্দ্ৰ" },
+                    "Leo": { gem: "মাণিক্য (Ruby)", alt: "পীত পোখৰাজ", metal: "সোণ বা তাম", finger: "অনামিকা", day: "দেওবাৰে পুৱা", lord: "সূৰ্য" },
+                    "Virgo": { gem: "পান্না (Emerald)", alt: "বগা ওপাল", metal: "সোণ বা ৰূপ", finger: "কনিষ্ঠা", day: "বুধবাৰে পুৱা", lord: "বুধ" },
+                    "Libra": { gem: "বগা ওপাল (White Opal)", alt: "পান্না", metal: "ৰূপ", finger: "মাজু আঙুলি", day: "শুক্ৰবাৰে পুৱা", lord: "শুক্ৰ" },
+                    "Scorpio": { gem: "ৰক্ত প্ৰবাল (Red Coral)", alt: "পীত পোখৰাজ", metal: "সোণ বা তাম", finger: "অনামিকা", day: "মঙলবাৰে পুৱা", lord: "মংগল" },
+                    "Sagittarius": { gem: "পীত পোখৰাজ (Yellow Sapphire)", alt: "মাণিক্য", metal: "সোণ", finger: "তৰ্জনী", day: "বৃহস্পতিবাৰে পুৱা", lord: "বৃহস্পতি" },
+                    "Capricorn": { gem: "নীলা (Blue Sapphire)", alt: "পান্না", metal: "পঞ্চধাতু বা ৰূপ", finger: "মাজু আঙুলি", day: "শনিবাৰে পুৱা", lord: "শনি" },
+                    "Aquarius": { gem: "নীলা (Blue Sapphire)", alt: "বগা ওপাল", metal: "পঞ্চধাতু বা ৰূপ", finger: "মাজু আঙুলি", day: "শনিবাৰে পুৱা", lord: "শনি" },
+                    "Pisces": { gem: "পীত পোখৰাজ (Yellow Sapphire)", alt: "মুকুতা", metal: "সোণ", finger: "তৰ্জনী", day: "বৃহস্পতিবাৰে পুৱা", lord: "বৃহস্পতি" }
+                };
+                const gemInfo = gemstoneGuide[rLagnaRashi] || gemstoneGuide["Cancer"];
+
+                let remediesPage = `
+                <div class="page">
+                    <h2 class="section-title">❁ বৈদিক নিদান আৰু প্ৰতিকাৰ ❁</h2>
+                    <div class="info-card remedy-card">
+                        <div class="card-title">💎 শুভ ৰত্ন আৰু ধাৰণ বিধি</div>
+                        <div class="card-content">
+                            আপোনাৰ <strong>${rashiAsMap[rLagnaRashi] || rLagnaRashi}</strong> লগ্নৰ বাবে সৰ্বোত্তম ৰত্ন হৈছে <strong>${gemInfo.gem}</strong>।<br>
+                            • <strong>ধাতু:</strong> ${gemInfo.metal} &nbsp;|&nbsp; <strong>আঙুলি:</strong> সোঁহাতৰ ${gemInfo.finger} &nbsp;|&nbsp; <strong>সময়:</strong> ${gemInfo.day}
+                        </div>
+                    </div>
+                    <div class="footer-seal">॥ ইতি জ্যোতিষ অসম ॥</div>
+                </div>`;
+
+                const contentHtml = `
+                    <div class="page page-break">
+                        <h2 class="section-title">❁ মূল জ্যোতিষিক পৰিচয় ❁</h2>
+                        <div class="info-card">
+                            <div class="card-title">লগ্ন (Ascendant): <strong>${rashiAsMap[chart.ascendant.rashi] || chart.ascendant.rashi}</strong></div>
+                            <div class="card-title">চন্দ্ৰ ৰাশি (Moon Sign): <strong>${rashiAsMap[chart.planets.Moon.rashi] || chart.planets.Moon.rashi}</strong></div>
+                            <div class="card-title">বৰ্তমান মহাদশা: <strong>${currentDashaAs} মহাদশা</strong></div>
+                        </div>
+                        <h2 class="section-title" style="margin-top:35px;">❁ জন্ম কুণ্ডলী আৰু গ্ৰহ স্থিতি ❁</h2>
+                        ${svgHtml}
+                        ${planetsHtml}
+                        ${dashaHtml}
+                    </div>
+                    ${housesAnalysisPage}
+                    ${careerAnalysisPage}
+                    ${loveAnalysisPage}
+                    ${extraAnalysisPage}
+                    ${remediesPage}
+                `;
+
+                const reportHtml = `
+                    <!DOCTYPE html>
+                    <html lang="as">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>${name} - জ্যোতিষ অসম ৰিপোৰ্ট</title>
+                        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Assamese:wght@400;600;700&display=swap" rel="stylesheet">
+                        <style>
+                            body { font-family: 'Noto Sans Assamese', Georgia, serif; line-height: 1.8; color: #3e2723; background: #e8dcc4; margin: 0; padding: 20px; }
+                            .page { max-width: 850px; margin: 0 auto 30px; background: #fdf5e6; padding: 50px 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 8px double #8b0000; position: relative; box-sizing: border-box; }
+                            .page::before { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #8b0000; pointer-events: none; }
+                            .cover { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 80vh; }
+                            .om-symbol { font-size: 80px; color: #8b0000; margin-bottom: 20px; }
+                            .cover-brand { font-size: 45px; font-weight: 700; color: #5c3a21; margin-bottom: 10px; border-bottom: 2px solid #8b0000; display: inline-block; padding-bottom: 10px;}
+                            .cover-subtitle { font-size: 24px; color: #8b0000; margin-bottom: 40px; font-weight: 600; }
+                            .cover-details { margin-top: 40px; text-align: left; background: rgba(219, 190, 146, 0.2); padding: 30px; border: 1px solid #c9a961; border-radius: 4px; }
+                            .detail-row { font-size: 18px; margin-bottom: 12px; border-bottom: 1px dashed #c9a961; padding-bottom: 5px; }
+                            .detail-label { font-weight: 600; color: #8b0000; display: inline-block; width: 150px; }
+                            .section-title { font-size: 26px; font-weight: 700; color: #8b0000; text-align: center; margin-bottom: 30px; border-bottom: 2px solid #8b0000; padding-bottom: 10px; }
+                            .sub-heading { font-size: 20px; color: #5c3a21; margin-top: 28px; margin-bottom: 14px; border-left: 4px solid #8b0000; padding-left: 10px; font-weight: bold;}
+                            .info-card { background: rgba(219, 190, 146, 0.15); border: 1px solid #d4b483; border-left: 5px solid #8b0000; padding: 20px; margin: 15px 0; border-radius: 3px; }
+                            .remedy-card { border-left-color: #5c3a21; background: rgba(92, 58, 33, 0.05); }
+                            .card-title { font-weight: 700; color: #8b0000; margin-bottom: 10px; font-size: 18px; }
+                            .vedic-table { width: 100%; border-collapse: collapse; margin: 20px 0; border: 2px solid #8b0000; }
+                            .vedic-table th { background: #8b0000; color: #fdf5e6; padding: 10px 12px; text-align: center; font-size: 15px; border: 1px solid #5c3a21; }
+                            .vedic-table td { padding: 10px 12px; border: 1px solid #a67b5b; text-align: center; color: #3e2723; font-size: 15px; }
+                            .vedic-table tr:nth-child(even) { background: rgba(219, 190, 146, 0.2); }
+                            .kundali-wrapper { display: flex; flex-direction: column; align-items: center; margin: 25px 0; }
+                            .footer-seal { text-align: center; margin-top: 40px; color: #8b0000; font-size: 18px; font-weight: bold; border-top: 2px dashed #8b0000; padding-top: 20px; }
+                            .print-btn-wrapper { text-align: center; margin-top: 15px; padding-bottom: 30px; }
+                            .print-btn { background: #8b0000; color: #fdf5e6; border: 2px solid #5c3a21; padding: 14px 32px; font-size: 18px; cursor: pointer; font-weight: bold; border-radius: 6px; }
+                            @media print {
+                                @page { margin: 8mm; }
+                                body { background: #fdf5e6; padding: 0; }
+                                .page { box-shadow: none; margin: 0; border: 4px double #8b0000; width: 100%; max-width: 100%; }
+                                .page-break { page-break-after: always; }
+                                .print-btn-wrapper { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="print-btn-wrapper">
+                            <button class="print-btn" onclick="window.print()">📥 ৰিপোৰ্ট প্ৰিন্ট বা PDF ছেভ কৰক</button>
+                        </div>
+                        <div class="page page-break cover">
+                            <div class="om-symbol">ॐ</div>
+                            <div><h1 class="cover-brand">জ্যোতিষ অসম</h1></div>
+                            <div class="cover-subtitle">${serviceTitle}</div>
+                            <div class="cover-details">
+                                <div class="detail-row"><span class="detail-label">গ্ৰাহকৰ নাম:</span> ${name}</div>
+                                <div class="detail-row"><span class="detail-label">জন্ম তাৰিখ:</span> ${dob}</div>
+                                <div class="detail-row"><span class="detail-label">জন্মৰ সময়:</span> ${tob}</div>
+                                <div class="detail-row"><span class="detail-label">জন্ম স্থান:</span> ${place}</div>
+                            </div>
+                        </div>
+                        ${contentHtml}
+                    </body>
+                    </html>
+                `;
+
+                const win = window.open('', '_blank');
+                if(win) { win.document.write(reportHtml); win.document.close(); } 
+                else { document.body.innerHTML = reportHtml; }
+            } catch (error) {
+                console.error("Error fetching chart:", error);
+                alert("ৰিপোৰ্ট খোলোঁতে সমস্যা হৈছে: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
