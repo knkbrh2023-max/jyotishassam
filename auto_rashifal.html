@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+  <meta charset="UTF-8">
+  <title>Jyotish Assam - Auto Daily Rashifal Card</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #1a1a1a;
+      font-family: 'Noto Serif Bengali', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      margin: 0;
+    }
+    .btn-bar {
+      margin-bottom: 18px;
+    }
+    .dl-btn {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 17px;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      font-family: inherit;
+    }
+    /* মূল ফটোৰ ফ্ৰেম */
+    #rashifal-sheet {
+      width: 920px;
+      background: linear-gradient(180deg, #1a0933 0%, #f4f1ea 18%, #eef2f3 100%);
+      border: 5px solid #d4af37;
+      border-radius: 14px;
+      padding: 16px;
+      box-sizing: border-box;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    /* ওপৰৰ হেডাৰ অংশ */
+    .top-header {
+      background: radial-gradient(circle at center, #3b1d5e 0%, #120524 100%);
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 14px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      position: relative;
+    }
+    /* গামোচা থকা অফিচিয়েল ল'গ' ফ্ৰেম */
+    .logo-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3.5px solid #ffd700;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.65);
+      flex-shrink: 0;
+    }
+    .logo-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .om-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3.5px solid #ffd700;
+      background: radial-gradient(circle, #8b0000, #2b0000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 54px;
+      color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      flex-shrink: 0;
+    }
+    .header-center {
+      text-align: center;
+      flex-grow: 1;
+    }
+    .date-pill {
+      display: inline-block;
+      background: linear-gradient(90deg, #b33900, #e65c00, #b33900);
+      border: 1.5px solid #ffd700;
+      color: #fff;
+      padding: 4px 22px;
+      border-radius: 30px;
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .big-title {
+      font-size: 46px;
+      font-weight: 900;
+      color: #ffd700;
+      margin: 6px 0;
+      text-shadow: 0 3px 0 #7a3e00, 0 5px 12px rgba(0,0,0,0.8);
+      letter-spacing: 1px;
+    }
+    .day-pill {
+      display: inline-block;
+      background: #4a154b;
+      border: 1.5px solid #e0a96d;
+      color: #fff;
+      padding: 3px 24px;
+      border-radius: 25px;
+      font-size: 19px;
+      font-weight: 700;
+    }
+    .sub-note {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      color: #111;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 6px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #d4af37;
+    }
+    /* ৩x৪ ৰাশিফল গ্ৰিড */
+    .rashi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .rashi-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1.5px solid #d1d5db;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .rashi-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 16.5px;
+      border-bottom: 2px solid rgba(255, 215, 0, 0.6);
+    }
+    .rashi-icon {
+      background: #fff;
+      color: #222;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      border: 2px solid #ffd700;
+      flex-shrink: 0;
+    }
+    .rashi-body {
+      padding: 9px 11px;
+      font-size: 12.8px;
+      line-height: 1.52;
+      color: #111;
+      text-align: justify;
+      font-weight: 500;
+    }
+    /* তলৰ ব্ৰেণ্ডিং ফুটাৰ */
+    .bottom-footer {
+      margin-top: 12px;
+      background: linear-gradient(90deg, #0d1b3e, #1a365d, #0d1b3e);
+      border: 2px solid #ffd700;
+      border-radius: 30px;
+      padding: 7px 20px;
+      color: #ffd700;
+      font-size: 16px;
+      font-weight: 900;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid #ffd700;
+      background: #fff;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="btn-bar">
+    <button class="dl-btn" onclick="downloadRashifalImage()">📥 আজিৰ ৰাশিফল ফটো ডাউনলোড কৰক (HD)</button>
+  </div>
+
+  <div id="rashifal-sheet">
+    <!-- ওপৰৰ অংশ (বাঁওফালে গামোচা ল'গ', সোঁফালে ওঁম চিহ্ন) -->
+    <div class="top-header">
+      <div class="logo-circle">
+        <img src="icon.png" onerror="this.src='https://jyotishassam.com/icon.png'" alt="Jyotish Assam Logo">
+      </div>
+      <div class="header-center">
+        <div class="date-pill" id="auto-date">📅 ২৬ ছেপ্টেম্বৰ ২০২৬</div>
+        <div class="big-title">আজিৰ ৰাশিফল</div>
+        <div class="day-pill" id="auto-day">🌸 শনিবাৰ 🌸</div>
+      </div>
+      <div class="om-circle">🕉️</div>
+    </div>
+
+    <div class="sub-note">
+      (বৈদিক জ্যোতিষ গণনাৰ ওপৰত আধাৰিত দৈনিক ৰাশিফল • সৌজন্যত: <strong>জ্যোতিষ অসম - jyotishassam.com</strong>)
+    </div>
+
+    <!-- ১২টা ৰাশিৰ ৩x৪ গ্ৰিড -->
+    <div class="rashi-grid" id="rashi-container"></div>
+
+    <!-- তলৰ ব্ৰেণ্ডিং অংশ -->
+    <div class="bottom-footer">
+      <div class="footer-brand">
+        <img src="icon.png" onerror="this.src='https://jyotishassam.com/icon.png'" class="footer-logo" alt="Logo">
+        <span>সকলো ৰাশিৰ বাবে আজিৰ দিনটো মঙ্গলময় হওক</span>
+      </div>
+      <span style="background:#ffd700; color:#8b0000; padding:3px 16px; border-radius:20px; font-family:sans-serif;">🌐 jyotishassam.com</span>
+    </div>
+  </div>
+
+<script>
+  const now = new Date();
+  const assameseMonths = ["জানুৱাৰী", "ফেব্ৰুৱাৰী", "মাৰ্চ", "এপ্ৰিল", "মে'", "জুন", "জুলাই", "আগষ্ট", "ছেপ্টেম্বৰ", "অক্টোবৰ", "নৱেম্বৰ", "ডিচেম্বৰ"];
+  const assameseDays = ["দেওবাৰ", "সোমবাৰ", "মঙ্গলবাৰ", "বুধবাৰ", "বৃহস্পতিবাৰ", "শুক্ৰবাৰ", "শনিবাৰ"];
+  
+  function toAssameseNum(n) {
+    const map = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+    return String(n).replace(/[0-9]/g, m => map[m]);
+  }
+
+  document.getElementById("auto-date").innerText = `📅 ${toAssameseNum(now.getDate())} ${assameseMonths[now.getMonth()]} ${toAssameseNum(now.getFullYear())}`;
+  document.getElementById("auto-day").innerText = `🌸 ${assameseDays[now.getDay()]} 🌸`;
+
+  const rashis = [
+    { name: "মেষ ৰাশি (Aries)", icon: "♈", color: "#b91c1c" },
+    { name: "বৃষ ৰাশি (Taurus)", icon: "♉", color: "#115e59" },
+    { name: "মিথুন ৰাশি (Gemini)", icon: "♊", color: "#1d4ed8" },
+    { name: "কৰ্কট ৰাশি (Cancer)", icon: "♋", color: "#4c1d95" },
+    { name: "সিংহ ৰাশি (Leo)", icon: "♌", color: "#b45309" },
+    { name: "কন্যা ৰাশি (Virgo)", icon: "♍", color: "#701a75" },
+    { name: "তুলা ৰাশি (Libra)", icon: "♎", color: "#0f766e" },
+    { name: "বৃশ্চিক ৰাশি (Scorpio)", icon: "♏", color: "#1e3a8a" },
+    { name: "ধনু ৰাশি (Sagittarius)", icon: "♐", color: "#854d0e" },
+    { name: "মকৰ ৰাশি (Capricorn)", icon: "♑", color: "#7c2d12" },
+    { name: "কুম্ভ ৰাশি (Aquarius)", icon: "♒", color: "#0369a1" },
+    { name: "মীন ৰাশি (Pisces)", icon: "♓", color: "#9d174d" }
+  ];
+
+  const line1 = [
+    "আজি আপোনাৰ আত্মবিশ্বাস আৰু কৰ্মস্পৃহা বৃদ্ধি পাব পাৰে।",
+    "আজি ধৈৰ্য আৰু বুদ্ধিমত্তাৰে সিদ্ধান্ত লোৱাৰ বিশেষ দিন।",
+    "আজি আপোনাৰ যোগাযোগৰ দক্ষতা বিশেষ সহায়ক হ'ব পাৰে।",
+    "আজি পৰিয়াল আৰু ব্যক্তিগত জীৱন আপোনাৰ বাবে অধিক গুৰুত্বপূৰ্ণ হৈ উঠিব।",
+    "আজি আপোনাৰ নেতৃত্ব দিয়াৰ ক্ষমতা প্রকাশ পাব আৰু সন্মান বাঢ়িব।",
+    "আজি আপোনাৰ বাবে নতুন পৰিকল্পনা কৰি আগবঢ়াৰ উত্তম দিন।",
+    "আজি জীৱনত ভাৰসাম্য বজাই ৰখাটো অতি প্রয়োজনীয় হ'ব।",
+    "আজি আপোনাৰ দৃঢ়তা আৰু সাহসে বহু কঠিন কাম সহজ কৰি তুলিব।",
+    "আজি নতুন সুযোগ আৰু নতুন অভিজ্ঞতা লাভ কৰাৰ সম্ভাৱনা আছে।",
+    "আজি কঠোৰ পৰিশ্ৰমৰ উচিত ফল লাভ কৰাৰ যোগ দেখা যায়।",
+    "আজি আপোনাৰ চিন্তা-ভাৱনাত নতুনত্ব আহিব আৰু মন প্রফুল্ল থাকিব।",
+    "আজি আপোনাৰ অন্তৰ্দৃষ্টিয়ে সঠিক সিদ্ধান্ত লোৱাত সহায় কৰিব।"
+  ];
+
+  const line2 = [
+    "বহুদিন ধৰি ৰৈ থকা কোনো কাম আগবঢ়াই নিয়াৰ সুযোগ লাভ কৰিব। কৰ্মক্ষেত্ৰত আপোনাৰ পৰিশ্ৰমে প্ৰশংসা লাভ কৰিব।",
+    "কৰ্মক্ষেত্ৰত নতুন দায়িত্ব আহিব পাৰে। ধন-সম্পৰ্কীয় কোনো বিষয়ত ভাল খবৰ লাভ কৰাৰ যোগ আছে।",
+    "নতুন মানুহৰ সৈতে পৰিচয় বা চাকৰি-ব্যৱসায়ত গুৰুত্বপূৰ্ণ আলোচনা সফল হ'ব পাৰে।",
+    "কোনো পুৰণি চিন্তা বা সমস্যা লাহে লাহে সমাধানৰ দিশে আগবাঢ়িব। সহকৰ্মীৰ সহযোগিতা পাব।",
+    "ব্যৱসায়ত নতুন সুযোগ আহিব পাৰে, কিন্তু তৎক্ষণাত সিদ্ধান্ত নলৈ সকলো দিশ পৰীক্ষা কৰক।",
+    "যি কাম বহুদিন ধৰি অসম্পূৰ্ণ হৈ আছিল, সেই কাম সম্পূৰ্ণ কৰাৰ সুযোগ পাব। আৰ্থিক দিশত সৰু-সুৰা লাভ হ'ব।",
+    "আপোনাৰ সৃষ্টিশীল চিন্তাই আনক আকৰ্ষণ কৰিব। আৰ্থিক পৰিস্থিতি উন্নত হ'ব যদিও অপ্ৰয়োজনীয় খৰচ নকৰিব।",
+    "নিজৰ গোপন পৰিকল্পনা সকলোৰে সৈতে ভাগ-বতৰা কৰাৰ আগতে অলপ সাৱধান হওক। ধনৰ লেনদেনত সতৰ্ক থাকক।",
+    "দূৰ ঠাইলৈ যাত্ৰা বা শুভ যোগাযোগৰ যোগ আছে। ছাত্ৰ-ছাত্ৰীৰ বাবে অধ্যয়নত মনোযোগ বৃদ্ধি পাব।",
+    "ব্যৱসায়ীসকলে পুৰণি কোনো যোগাযোগৰ পৰা লাভজনক সুযোগ পাব পাৰে। ধনৰ ক্ষেত্ৰত স্থিতি সচ্ছল থাকিব।",
+    "নতুন কাম আৰম্ভ কৰাৰ বাবে দিনটো অনুকূল। আৰ্থিক দিশত আগতকৈ কিছু উন্নতি দেখা যাব পাৰে।",
+    "কৰ্মক্ষেত্ৰত কোনো নতুন দায়িত্ব বা সুযোগ লাভ কৰাৰ সম্ভাৱনা আছে। সঞ্চয়ৰ ওপৰত বিশেষ গুৰুত্ব দিয়ক।"
+  ];
+
+  const line3 = [
+    "প্ৰিয়জনৰ সৈতে ভুল বুজাবুজি আঁতৰিব। স্বাস্থ্যৰ ক্ষেত্ৰত বিশ্ৰামৰ প্ৰতি গুৰুত্ব দিয়ক।",
+    "পৰিয়ালৰ পৰা সহায় লাভ কৰিব। প্ৰেমৰ ক্ষেত্ৰত সম্পৰ্ক অধিক গভীৰ হ'ব আৰু খাদ্যাভ্যাসত সাৱধান হওক।",
+    "প্ৰেমৰ ক্ষেত্ৰত মনৰ কথা স্পষ্টকৈ প্ৰকাশ কৰক। মানসিক চাপ কমাবলৈ কিছু সময় নিজৰ বাবে ৰাখক।",
+    "প্ৰিয়জনৰ সৈতে সুন্দৰ সময় কটাব পাৰিব। স্বাস্থ্যৰ ক্ষেত্ৰত টোপনি আৰু পানী খোৱাৰ প্ৰতি গুৰুত্ব দিয়ক।",
+    "প্ৰেমৰ সম্পৰ্কত বিশ্বাস আৰু বুজাবুজি বৃদ্ধি পাব। অহংকাৰ বা খঙৰ বাবে সুন্দৰ সম্পৰ্ক নষ্ট নকৰিব।",
+    "কোনো বন্ধুৰ পৰা গুৰুত্বপূৰ্ণ পৰামৰ্শ লাভ কৰিব। অত্যধিক চিন্তা নকৰি ইতিবাচক হৈ থাকক।",
+    "প্ৰেমৰ ক্ষেত্ৰত পুৰণি মনোমালিন্য দূৰ হ'ব। পৰিয়ালৰ সৈতে কিছু আনন্দময় সময় কটোৱাৰ সুযোগ পাব।",
+    "প্ৰেমৰ সম্পৰ্কত আৱেগ বৃদ্ধি পাব পাৰে। খং নিয়ন্ত্ৰণত ৰাখিলে দিনটো অধিক সুন্দৰ হ'ব।",
+    "অতিৰিক্ত আশাবাদী হৈ হঠাতে ডাঙৰ সিদ্ধান্ত নল'ব। প্ৰেমৰ ক্ষেত্ৰত সুখৰ মুহূৰ্ত লাভ কৰিব।",
+    "প্ৰেমৰ ক্ষেত্ৰত সংগীৰ অনুভূতিক গুৰুত্ব দিয়ক। অত্যধিক কামৰ মাজতো স্বাস্থ্যৰ যত্ন ল'বলৈ নাপাহৰিব।",
+    "কোনো পুৰণি বন্ধুৰ সাথে পুনৰ যোগাযোগ হ'ব পাৰে। কিন্তু তাড়াহুড়াকৈ কোনো ডাঙৰ সিদ্ধান্ত নল'ব।",
+    "পৰিয়ালৰ পৰা মানসিক সমৰ্থন লাভ কৰিব। নিজৰ স্বাস্থ্য আৰু মানসিক শান্তিৰ প্ৰতি যত্ন লওক।"
+  ];
+
+  const seed = now.getFullYear() * 1000 + (now.getMonth() + 1) * 50 + now.getDate();
+  const container = document.getElementById("rashi-container");
+
+  rashis.forEach((r, idx) => {
+    const p1 = line1[(seed + idx * 3) % line1.length];
+    const p2 = line2[(seed + idx * 5) % line2.length];
+    const p3 = line3[(seed + idx * 7) % line3.length];
+
+    const card = document.createElement("div");
+    card.className = "rashi-card";
+    card.innerHTML = `
+      <div class="rashi-head" style="background: ${r.color};">
+        <div class="rashi-icon">${r.icon}</div>
+        <div>${r.name}</div>
+      </div>
+      <div class="rashi-body">
+        ${p1} ${p2} ${p3}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  function downloadRashifalImage() {
+    const sheet = document.getElementById("rashifal-sheet");
+    html2canvas(sheet, { scale: 2, useCORS: true }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = `Ajir_Rashifal_${now.getDate()}_${now.getMonth()+1}_${now.getFullYear()}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  }
+</script>
+
+</body>
+</html>
